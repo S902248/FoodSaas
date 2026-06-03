@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { 
-  ChefHat, LayoutDashboard, UtensilsCrossed, ClipboardList, Grid2X2, 
-  QrCode, LogOut, Plus, Download, Search, Filter, 
-  Trash2, Copy, RefreshCw, Check, Clock, AlertTriangle
+  ChefHat, 
+  QrCode, Plus, Download, Search, Filter, 
+  Trash2, Copy, RefreshCw, Check, Clock, ClipboardList, AlertTriangle
 } from 'lucide-react';
 
 const QRManagement = () => {
@@ -48,10 +48,8 @@ const QRManagement = () => {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+
+
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -163,90 +161,11 @@ const QRManagement = () => {
   }
 
   return (
-    <div className="min-h-screen flex bg-[#F8FAFC] font-sans overflow-hidden">
-      {/* Premium Sidebar */}
-      <aside className="w-64 bg-[#111827] text-slate-300 flex flex-col justify-between transition-all duration-300 shadow-2xl z-30">
-        <div>
-          {/* Logo */}
-          <div className="p-6 flex items-center gap-3 text-white border-b border-slate-800/50">
-            <div className="p-2 bg-gradient-to-br from-[#6C4DFF] to-indigo-600 rounded-xl shadow-lg shadow-indigo-500/30">
-              <ChefHat size={24} className="text-white" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">FoodaaS</span>
-          </div>
-          
-          {/* Nav Items */}
-          <nav className="px-4 py-6 space-y-1.5">
-            <Link 
-              to="/dashboard" 
-              className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 hover:text-white text-slate-400 transition-all group"
-            >
-              <LayoutDashboard size={20} className="text-slate-400 group-hover:text-white" />
-              <span className="font-semibold text-sm">Dashboard</span>
-            </Link>
-
-            <Link 
-              to="/dashboard/menu" 
-              className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 hover:text-white text-slate-400 transition-all group"
-            >
-              <UtensilsCrossed size={20} className="text-slate-400 group-hover:text-white" />
-              <span className="font-semibold text-sm">Menu</span>
-            </Link>
-
-            <Link
-              to="/dashboard/orders"
-              className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 hover:text-white text-slate-400 transition-all group"
-            >
-              <ClipboardList size={20} className="text-slate-400 group-hover:text-white" />
-              <span className="font-semibold text-sm">Live Orders</span>
-            </Link>
-
-            <a 
-              href="#" 
-              className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800/50 hover:text-white text-slate-400 transition-all group"
-            >
-              <Grid2X2 size={20} className="text-slate-400 group-hover:text-white" />
-              <span className="font-semibold text-sm">Table Management</span>
-            </a>
-
-            <Link 
-              to="/dashboard/qr-codes" 
-              className="flex items-center justify-between px-4 py-3 rounded-xl bg-gradient-to-r from-[#6C4DFF] to-[#5235DB] text-white shadow-xl shadow-indigo-500/20 group"
-            >
-              <div className="flex items-center gap-3">
-                <QrCode size={20} className="text-white" />
-                <span className="font-semibold text-sm">QR Codes</span>
-              </div>
-              <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
-            </Link>
-          </nav>
-        </div>
-
-        {/* Profile Card & Logout */}
-        <div className="p-4 border-t border-slate-800/50 space-y-3">
-          <div className="flex items-center gap-3 px-3 py-2 bg-slate-800/30 rounded-xl border border-slate-850/50">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#6C4DFF] to-indigo-400 flex items-center justify-center text-white font-bold shadow-md">
-              {restaurant?.restaurantName?.charAt(0) || 'O'}
-            </div>
-            <div className="overflow-hidden">
-              <p className="font-semibold text-sm text-white truncate">{restaurant?.restaurantName || 'Osteria Bella'}</p>
-              <p className="text-xs text-slate-500 truncate">Store Owner</p>
-            </div>
-          </div>
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 w-full text-left rounded-xl hover:bg-red-500/10 hover:text-red-400 text-slate-400 transition-all duration-200"
-          >
-            <LogOut size={20} />
-            <span className="font-semibold text-sm">Log Out</span>
-          </button>
-        </div>
-      </aside>
-
+    <>
       {/* Main Panel Content Area */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Navbar */}
-        <header className="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-8 z-20">
+        <header className="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-8 z-20 shrink-0">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">QR Code Management</h1>
             <p className="text-xs text-slate-400 font-medium">Create, manage and monitor your live ordering touchpoints.</p>
@@ -432,7 +351,7 @@ const QRManagement = () => {
             </div>
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Create Modal */}
       {showCreateModal && (
@@ -622,7 +541,7 @@ const QRManagement = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

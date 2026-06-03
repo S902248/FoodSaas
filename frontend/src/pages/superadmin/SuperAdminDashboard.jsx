@@ -299,114 +299,83 @@ const SuperAdminDashboard = () => {
     );
   }
 
-  // Sidebar Items
-  const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'restaurants', label: 'Restaurants', icon: Utensils },
-    { id: 'plans', label: 'Subscription Plans', icon: Percent },
-    { id: 'active_subs', label: 'Active Subscriptions', icon: CheckCircle },
-    { id: 'expired_subs', label: 'Expired Subscriptions', icon: ShieldAlert },
-    { id: 'payments', label: 'Payments', icon: CreditCard },
-    { id: 'revenue', label: 'Revenue Analytics', icon: TrendingUp },
-    { id: 'qr_codes', label: 'QR Management', icon: QrCode },
-    { id: 'orders', label: 'Orders Monitoring', icon: ShoppingBag },
-    { id: 'users', label: 'Users & Staff', icon: Users },
-    { id: 'support', label: 'Support Tickets', icon: LifeBuoy },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'coupons', label: 'Coupons & Offers', icon: Percent },
-    { id: 'settings', label: 'Settings', icon: Settings },
+  // Grouped Navigation Items
+  const menuGroups = [
+    {
+      groupLabel: 'Dashboard',
+      icon: LayoutDashboard,
+      id: 'dashboard'
+    },
+    {
+      groupLabel: 'Restaurants',
+      icon: Utensils,
+      items: [
+        { id: 'restaurants', label: 'All Restaurants' },
+        { id: 'active_subs', label: 'Active Subscriptions' },
+        { id: 'expired_subs', label: 'Expired Subscriptions' }
+      ]
+    },
+    {
+      groupLabel: 'Finance',
+      icon: DollarSign,
+      items: [
+        { id: 'plans', label: 'Subscription Plans' },
+        { id: 'payments', label: 'Payments' },
+        { id: 'revenue', label: 'Revenue Analytics' },
+        { id: 'coupons', label: 'Coupons & Offers' }
+      ]
+    },
+    {
+      groupLabel: 'Operations',
+      icon: ShoppingBag,
+      items: [
+        { id: 'qr_codes', label: 'QR Management' },
+        { id: 'orders', label: 'Orders Monitoring' }
+      ]
+    },
+    {
+      groupLabel: 'System',
+      icon: Settings,
+      items: [
+        { id: 'users', label: 'Users & Staff' },
+        { id: 'support', label: 'Support Tickets' },
+        { id: 'notifications', label: 'Notifications' },
+        { id: 'settings', label: 'System Settings' }
+      ]
+    }
   ];
 
   return (
-    <div className={`min-h-screen flex overflow-hidden font-sans transition-colors duration-200 ${bgMain}`}>
-      {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} shrink-0 transition-all duration-300 ${bgSidebar} flex flex-col justify-between z-30 shadow-2xl`}>
-        <div>
+    <div className={`min-h-screen flex flex-col overflow-hidden font-sans transition-colors duration-200 ${bgMain}`}>
+      {/* Top Navbar & Header */}
+      <header className={`flex flex-col z-20 transition-all shadow-sm ${
+        darkMode ? 'bg-slate-950 border-b border-slate-900 backdrop-blur-md' : 'bg-white border-b border-slate-200'
+      }`}>
+        <div className="h-20 flex items-center justify-between px-6">
           {/* Logo Branding */}
-          <div className={`p-5 flex items-center gap-3 border-b ${darkMode ? 'border-slate-900' : 'border-slate-800/40'}`}>
-            <div className="p-2 bg-gradient-to-tr from-indigo-500 to-violet-600 rounded-xl shadow-lg shrink-0">
-              <Utensils size={22} className="text-white" />
-            </div>
-            {sidebarOpen && (
-              <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-tr from-indigo-500 to-violet-600 rounded-xl shadow-lg shrink-0">
+                <Utensils size={24} className="text-white" />
+              </div>
+              <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
                 FoodaaS
               </span>
-            )}
-          </div>
-
-          {/* Navigation Links */}
-          <nav className="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-160px)]">
-            {menuItems.map(item => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveTab(item.id);
-                    setSelectedItem(null);
-                  }}
-                  className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-200 group text-left cursor-pointer ${
-                    isActive 
-                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' 
-                      : 'text-slate-400 hover:bg-slate-800/40 hover:text-white'
-                  }`}
-                >
-                  <Icon size={20} className={isActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-200'} />
-                  {sidebarOpen && <span className="font-semibold text-xs tracking-wide">{item.label}</span>}
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-
-        {/* Profile Card / Logout */}
-        <div className={`p-4 border-t ${darkMode ? 'border-slate-900' : 'border-slate-800/40'} space-y-3`}>
-          {sidebarOpen && (
-            <div className={`flex items-center gap-3 p-2 rounded-xl ${darkMode ? 'bg-slate-900/40' : 'bg-slate-800/20'}`}>
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center font-bold text-white shadow-md">
-                {admin?.name?.charAt(0) || 'A'}
-              </div>
-              <div className="overflow-hidden">
-                <p className="font-bold text-xs text-white truncate">{admin?.name || 'Administrator'}</p>
-                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Super Admin</p>
-              </div>
             </div>
-          )}
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-3.5 px-4 py-3 w-full text-left rounded-xl hover:bg-red-500/10 hover:text-red-400 text-slate-400 transition-all duration-200 cursor-pointer"
-          >
-            <LogOut size={20} />
-            {sidebarOpen && <span className="font-bold text-xs">Log Out</span>}
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Panel Content Area */}
-      <main className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Navbar */}
-        <header className={`h-20 border-b flex items-center justify-between px-6 z-20 transition-all ${
-          darkMode ? 'bg-slate-950/80 border-slate-900 backdrop-blur-md' : 'bg-white border-slate-100'
-        }`}>
-          {/* Collapse sidebar button */}
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className={`p-2 rounded-lg hover:bg-slate-800/10 transition-colors text-slate-400 cursor-pointer`}
-            >
-              <Menu size={20} />
-            </button>
-            <div>
-              <h2 className={`text-xl font-extrabold tracking-tight ${textPrimary}`}>
+            
+            <div className={`hidden md:block h-8 w-px ${darkMode ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
+            
+            <div className="hidden md:block">
+              <h2 className={`text-2xl font-extrabold tracking-tight ${textPrimary}`}>
                 {activeTab.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
               </h2>
-              <p className={`text-[10px] font-semibold uppercase tracking-wider ${textSecondary}`}>
+              <p className={`text-xs font-bold uppercase tracking-wider ${textSecondary}`}>
                 System control board
               </p>
             </div>
           </div>
 
+          {/* Right Side Tools */}
           <div className="flex items-center gap-4">
             {/* Theme Toggle */}
             <button 
@@ -415,21 +384,132 @@ const SuperAdminDashboard = () => {
                 darkMode ? 'bg-slate-900 border-slate-800 text-amber-400 hover:bg-slate-800' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
               }`}
             >
-              {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
 
             {/* Notification Bells */}
             <div className="relative">
               <button className={`w-10 h-10 border rounded-xl flex items-center justify-center transition-colors shadow-sm cursor-pointer ${
-                darkMode ? 'bg-slate-900 border-slate-800 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-600'
+                darkMode ? 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
               }`}>
-                <Bell size={18} />
+                <Bell size={20} />
                 <span className="absolute top-2 right-2 w-2 h-2 bg-indigo-500 rounded-full ring-2 ring-white"></span>
               </button>
             </div>
-          </div>
-        </header>
 
+            <div className={`h-8 w-px mx-2 ${darkMode ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
+
+            {/* Profile Card & Logout */}
+            <div className={`flex items-center gap-3 p-1.5 pr-4 rounded-xl border transition-colors ${
+              darkMode ? 'bg-slate-900/40 border-slate-800/60 hover:bg-slate-800/80' : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
+            }`}>
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center font-bold text-white shadow-md">
+                {admin?.name?.charAt(0) || 'A'}
+              </div>
+              <div className="hidden sm:block overflow-hidden max-w-[120px]">
+                <p className={`font-extrabold text-sm truncate ${textPrimary}`}>{admin?.name || 'Administrator'}</p>
+                <p className="text-[10px] text-indigo-500 font-black uppercase tracking-wider">Super Admin</p>
+              </div>
+              <button 
+                onClick={handleLogout}
+                title="Logout"
+                className={`ml-2 p-1.5 rounded-lg transition-all duration-200 cursor-pointer ${
+                  darkMode ? 'hover:bg-red-500/20 text-slate-400 hover:text-red-400' : 'hover:bg-red-500/10 text-slate-500 hover:text-red-500'
+                }`}
+              >
+                <LogOut size={18} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation Links in Navbar */}
+        <div 
+          className={`flex items-center gap-3 flex-wrap px-6 py-4 border-t ${
+            darkMode ? 'border-slate-800/60 bg-slate-950/40' : 'border-slate-200 bg-slate-50/50'
+          }`}
+        >
+          {menuGroups.map((group, idx) => {
+            const Icon = group.icon;
+            
+            if (!group.items) {
+               // Single item like Dashboard
+               const isActive = activeTab === group.id;
+               return (
+                 <button
+                   key={idx}
+                   onClick={() => {
+                     setActiveTab(group.id);
+                     setSelectedItem(null);
+                   }}
+                   className={`flex shrink-0 items-center gap-3 px-6 py-3 rounded-full transition-all duration-200 cursor-pointer ${
+                     isActive 
+                       ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 ring-2 ring-indigo-600/20' 
+                       : `text-slate-500 ${
+                           darkMode 
+                             ? 'hover:text-slate-100 hover:bg-slate-800/80' 
+                             : 'hover:text-slate-900 hover:bg-slate-200/60'
+                         }`
+                   }`}
+                 >
+                   <Icon size={22} className={isActive ? 'text-white' : ''} />
+                   <span className="font-extrabold text-[15px] tracking-wide whitespace-nowrap">{group.groupLabel}</span>
+                 </button>
+               );
+            }
+
+            // Group Item (Dropdown)
+            const isGroupActive = group.items.some(i => i.id === activeTab);
+            
+            return (
+              <div key={idx} className="relative group shrink-0">
+                <button
+                  className={`flex shrink-0 items-center gap-3 px-6 py-3 rounded-full transition-all duration-200 cursor-pointer ${
+                    isGroupActive 
+                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 ring-2 ring-indigo-600/20' 
+                      : `text-slate-500 ${
+                          darkMode 
+                            ? 'hover:text-slate-100 hover:bg-slate-800/80' 
+                            : 'hover:text-slate-900 hover:bg-slate-200/60'
+                        }`
+                  }`}
+                >
+                  <Icon size={22} className={isGroupActive ? 'text-white' : ''} />
+                  <span className="font-extrabold text-[15px] tracking-wide whitespace-nowrap">{group.groupLabel}</span>
+                </button>
+
+                {/* Dropdown Menu */}
+                <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pt-2">
+                  <div className={`p-2 rounded-2xl shadow-xl border ${darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+                    {group.items.map(subItem => {
+                       const isSubActive = activeTab === subItem.id;
+                       return (
+                         <button
+                           key={subItem.id}
+                           onClick={() => {
+                             setActiveTab(subItem.id);
+                             setSelectedItem(null);
+                           }}
+                           className={`w-full text-left px-4 py-2.5 rounded-xl font-bold text-sm mb-1 last:mb-0 transition-colors cursor-pointer ${
+                             isSubActive 
+                               ? 'bg-indigo-500/10 text-indigo-500' 
+                               : darkMode ? 'text-slate-400 hover:bg-slate-800 hover:text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                           }`}
+                         >
+                           {subItem.label}
+                         </button>
+                       )
+                    })}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </header>
+
+      {/* Main Panel Content Area */}
+      <main className="flex-1 flex flex-col overflow-hidden">
         {/* Scrollable Dashboard Workspace */}
         <div className="flex-1 p-6 overflow-y-auto space-y-6">
           <AnimatePresence mode="wait">

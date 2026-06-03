@@ -2,13 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import {
-  ChefHat,
-  LayoutDashboard,
-  UtensilsCrossed,
-  ClipboardList,
-  Grid2X2,
-  QrCode,
-  LogOut,
   Plus,
   Pencil,
   Trash2,
@@ -18,11 +11,9 @@ import {
   FileImage,
   AlertTriangle
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
 
 const Menu = () => {
-  const { restaurant, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { restaurant } = useContext(AuthContext);
 
   const [menuItems, setMenuItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,11 +42,6 @@ const Menu = () => {
     } catch (err) {
       console.error('Error fetching menu', err);
     }
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
   };
 
   const openAddModal = () => {
@@ -192,50 +178,9 @@ const Menu = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#F8FAFC] font-sans">
-      {/* Sidebar - Same as Dashboard */}
-      <aside className="w-64 bg-[#111827] text-slate-300 flex flex-col transition-all duration-300 shadow-xl z-20">
-        <div className="p-6 flex items-center gap-3 text-white">
-          <ChefHat size={32} className="text-[#6C4DFF]" />
-          <span className="text-2xl font-bold tracking-tight">FoodaaS</span>
-        </div>
-
-        <nav className="flex-1 px-4 space-y-2 mt-4">
-          <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition-all">
-            <LayoutDashboard size={20} />
-            <span className="font-medium">Dashboard</span>
-          </Link>
-          <Link to="/dashboard/menu" className="flex items-center gap-3 px-4 py-3 bg-[#6C4DFF] text-white rounded-xl shadow-lg shadow-[#6C4DFF]/20 transition-all">
-            <UtensilsCrossed size={20} />
-            <span className="font-medium">Menu</span>
-          </Link>
-          <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition-all">
-            <ClipboardList size={20} />
-            <span className="font-medium">Orders</span>
-          </a>
-          <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition-all">
-            <Grid2X2 size={20} />
-            <span className="font-medium">Tables</span>
-          </a>
-          <Link to="/dashboard/qr-codes" className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition-all">
-            <QrCode size={20} />
-            <span className="font-medium">QR Codes</span>
-          </Link>
-        </nav>
-
-        <div className="p-4">
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 w-full text-left rounded-xl hover:bg-slate-800 hover:text-white transition-all text-slate-400"
-          >
-            <LogOut size={20} />
-            <span className="font-medium">Logout</span>
-          </button>
-        </div>
-      </aside>
-
+    <>
       {/* Main Content */}
-      <main className="flex-1 p-8 overflow-y-auto">
+      <div className="flex-1 p-8 overflow-y-auto">
         {/* Header */}
         <header className="flex justify-between items-center mb-8">
           <div>
@@ -343,7 +288,7 @@ const Menu = () => {
             </table>
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Add/Edit Modal */}
       {isModalOpen && (
@@ -474,7 +419,7 @@ const Menu = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

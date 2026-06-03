@@ -5,12 +5,14 @@ import { SuperAdminAuthProvider, SuperAdminAuthContext } from './context/SuperAd
 import Register from './pages/Register';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
+import DashboardLayout from './components/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import Menu from './pages/Menu';
 import CustomerMenu from './pages/CustomerMenu';
 import QRManagement from './pages/QRManagement';
 import QRScanTracker from './pages/QRScanTracker';
 import LiveOrderTracking from './pages/LiveOrderTracking';
+import ComingSoon from './pages/ComingSoon';
 
 // Super Admin Pages
 import SuperAdminLogin from './pages/superadmin/SuperAdminLogin';
@@ -58,38 +60,27 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route 
-        path="/dashboard" 
+
+      {/* Dashboard routes with shared layout */}
+      <Route
+        path="/dashboard"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <DashboardLayout />
           </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard/menu" 
-        element={
-          <ProtectedRoute>
-            <Menu />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard/qr-codes" 
-        element={
-          <ProtectedRoute>
-            <QRManagement />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard/orders" 
-        element={
-          <ProtectedRoute>
-            <LiveOrderTracking />
-          </ProtectedRoute>
-        } 
-      />
+        }
+      >
+        <Route index element={<Dashboard />} />
+        <Route path="menu" element={<Menu />} />
+        <Route path="orders" element={<LiveOrderTracking />} />
+        <Route path="qr-codes" element={<QRManagement />} />
+        <Route path="tables" element={<ComingSoon title="Table Management" />} />
+        <Route path="customers" element={<ComingSoon title="Customer Management" />} />
+        <Route path="billing" element={<ComingSoon title="Billing & Invoicing" />} />
+        <Route path="reports" element={<ComingSoon title="Advanced Reports" />} />
+        <Route path="settings" element={<ComingSoon title="Restaurant Settings" />} />
+      </Route>
+
       <Route 
         path="/r/:restaurantId/table/:tableNo" 
         element={<CustomerMenu />} 

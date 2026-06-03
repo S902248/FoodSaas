@@ -109,193 +109,138 @@
       "id": "a592d07e1a0961ef9ad4b146",
       "createdAt": "2026-05-22T08:54:50.436Z",
       "updatedAt": "2026-05-22T08:54:50.436Z"
+    },
+    {
+      "restaurantId": "4b80a6fc0ca86e62a5998638",
+      "name": "pizza",
+      "price": 200,
+      "category": "burger",
+      "image": "http://localhost:5000/uploads/1779944867178-Make you feel positive and peaceful ð Lofi Coffeeâ¦.jpg",
+      "isAvailable": true,
+      "createdAt": 1779944889538,
+      "_id": "50d094074863f5b82b5fd3ad",
+      "id": "50d094074863f5b82b5fd3ad",
+      "updatedAt": "2026-05-28T05:08:09.539Z"
     }
   ],
   "Restaurant": [
     {
       "restaurantName": "natkhat",
       "email": "natkhat@gmail.com",
-      "password": "$2b$10$n0lE2MiqrSDqpUX8AB8aR.fZSmaZyPdDfZKnYKrk2apPNTVDlZvkO",
+      "password": "$2b$10$w1chL2JqujVMkLJ9lG59aeEkendEZSIKBKofgQflrd4/1ST34ig3y",
       "ownerName": "Shubham Kumar",
       "phone": "+91 9876543210",
-      "plan": "fc27e1c6650d11fdb811b0a4",
+      "plan": "108fb2180423a9f3fbf33a3b",
       "status": "active",
-      "subscriptionExpiry": "2026-06-21T10:40:57.019Z",
-      "createdAt": "2026-03-23T10:40:57.019Z",
-      "_id": "faf13f5bb1db1682fc33749c",
-      "id": "faf13f5bb1db1682fc33749c",
-      "updatedAt": "2026-05-22T12:51:10.660Z",
-      "name": "natkhat",
-      "resetOtp": "365168",
-      "resetOtpExpires": 1779454870659
+      "subscriptionExpiry": "2026-07-03T10:40:28.843Z",
+      "createdAt": "2026-04-04T10:40:28.843Z",
+      "resetOtp": null,
+      "resetOtpExpires": null,
+      "_id": "06ea5dd1b8b52637bbb939ac",
+      "id": "06ea5dd1b8b52637bbb939ac",
+      "updatedAt": "2026-06-03T10:40:28.843Z",
+      "name": "natkhat"
     },
     {
       "restaurantName": "Osteria Bella",
       "email": "osteria@gmail.com",
-      "password": "$2b$10$n0lE2MiqrSDqpUX8AB8aR.fZSmaZyPdDfZKnYKrk2apPNTVDlZvkO",
+      "password": "$2b$10$w1chL2JqujVMkLJ9lG59aeEkendEZSIKBKofgQflrd4/1ST34ig3y",
       "ownerName": "Giovanni Rossi",
       "phone": "+91 8765432109",
-      "plan": "675519dda53e4f8108348fe2",
+      "plan": "37424f77237c068588896f73",
       "status": "active",
-      "subscriptionExpiry": "2026-06-06T10:40:57.019Z",
-      "createdAt": "2026-04-07T10:40:57.021Z",
-      "_id": "ed970d3ecfc74215d1494c81",
-      "id": "ed970d3ecfc74215d1494c81",
-      "updatedAt": "2026-05-22T10:40:57.021Z",
+      "subscriptionExpiry": "2026-06-18T10:40:28.843Z",
+      "createdAt": "2026-04-19T10:40:28.844Z",
+      "resetOtp": null,
+      "resetOtpExpires": null,
+      "_id": "e09cb061f119eb2a51df8e99",
+      "id": "e09cb061f119eb2a51df8e99",
+      "updatedAt": "2026-06-03T10:40:28.844Z",
       "name": "Osteria Bella"
     },
     {
       "restaurantName": "Spice Route",
       "email": "spice@gmail.com",
-      "password": "$2b$10$n0lE2MiqrSDqpUX8AB8aR.fZSmaZyPdDfZKnYKrk2apPNTVDlZvkO",
+      "password": "$2b$10$w1chL2JqujVMkLJ9lG59aeEkendEZSIKBKofgQflrd4/1ST34ig3y",
       "ownerName": "Karan Sharma",
       "phone": "+91 7654321098",
-      "plan": "04fee4c7e1d04473a2943dca",
-      "status": "active",
-      "subscriptionExpiry": "2026-07-21T10:47:52.769Z",
-      "createdAt": "2026-02-21T10:40:57.022Z",
-      "_id": "656336b5aadaa2e720f5ba4d",
-      "id": "656336b5aadaa2e720f5ba4d",
-      "updatedAt": "2026-05-22T10:47:52.770Z",
+      "plan": "df97bf4ed5a5edcd3deb4db6",
+      "status": "suspended",
+      "subscriptionExpiry": "2026-05-31T10:40:28.843Z",
+      "createdAt": "2026-03-05T10:40:28.844Z",
+      "resetOtp": null,
+      "resetOtpExpires": null,
+      "_id": "647a26f0728d259e7589dac5",
+      "id": "647a26f0728d259e7589dac5",
+      "updatedAt": "2026-06-03T10:40:28.844Z",
       "name": "Spice Route"
     },
     {
       "restaurantName": "Sushi House",
       "email": "sushi@gmail.com",
-      "password": "$2b$10$n0lE2MiqrSDqpUX8AB8aR.fZSmaZyPdDfZKnYKrk2apPNTVDlZvkO",
+      "password": "$2b$10$w1chL2JqujVMkLJ9lG59aeEkendEZSIKBKofgQflrd4/1ST34ig3y",
       "ownerName": "Yuki Tanaka",
       "phone": "+91 6543210987",
-      "plan": "fc27e1c6650d11fdb811b0a4",
+      "plan": "108fb2180423a9f3fbf33a3b",
       "status": "expired",
-      "subscriptionExpiry": "2026-05-12T10:40:57.019Z",
-      "createdAt": "2026-05-07T10:40:57.022Z",
-      "_id": "56e3a15d39205e58b3162298",
-      "id": "56e3a15d39205e58b3162298",
-      "updatedAt": "2026-05-22T10:40:57.023Z",
+      "subscriptionExpiry": "2026-05-24T10:40:28.843Z",
+      "createdAt": "2026-05-19T10:40:28.845Z",
+      "resetOtp": null,
+      "resetOtpExpires": null,
+      "_id": "2b35373fce22a66c3d2b3e05",
+      "id": "2b35373fce22a66c3d2b3e05",
+      "updatedAt": "2026-06-03T10:40:28.845Z",
       "name": "Sushi House"
     },
     {
       "restaurantName": "The Burger Club",
       "email": "burger@gmail.com",
-      "password": "$2b$10$n0lE2MiqrSDqpUX8AB8aR.fZSmaZyPdDfZKnYKrk2apPNTVDlZvkO",
+      "password": "$2b$10$w1chL2JqujVMkLJ9lG59aeEkendEZSIKBKofgQflrd4/1ST34ig3y",
       "ownerName": "Sarah Jenkins",
       "phone": "+91 5432109876",
-      "plan": "fc27e1c6650d11fdb811b0a4",
+      "plan": "108fb2180423a9f3fbf33a3b",
       "status": "active",
-      "subscriptionExpiry": "2026-05-27T10:40:57.019Z",
-      "createdAt": "2026-05-17T10:40:57.023Z",
-      "_id": "9e023c33bee17813d557d1a1",
-      "id": "9e023c33bee17813d557d1a1",
-      "updatedAt": "2026-05-22T10:40:57.023Z",
+      "subscriptionExpiry": "2026-06-08T10:40:28.843Z",
+      "createdAt": "2026-05-29T10:40:28.846Z",
+      "resetOtp": null,
+      "resetOtpExpires": null,
+      "_id": "fe9750b1af36f9e1dbd2c818",
+      "id": "fe9750b1af36f9e1dbd2c818",
+      "updatedAt": "2026-06-03T10:40:28.846Z",
       "name": "The Burger Club"
-    },
-    {
-      "restaurantName": "shivshambhoo",
-      "email": "shivshambhoo@gmail.com",
-      "password": "$2b$10$M.lix/r.SOoVFZCCF6UZeerlBVR8w1TMVV0THGdfCaLIhY9SStr6m",
-      "phone": "9022481582",
-      "ownerName": "Owner",
-      "resetOtp": "372502",
-      "resetOtpExpires": 1779448649000,
-      "status": "active",
-      "createdAt": 1779447650762,
-      "_id": "cf5a70e094434eb55e23d221",
-      "id": "cf5a70e094434eb55e23d221",
-      "updatedAt": "2026-05-22T11:07:29.000Z",
-      "name": "shivshambhoo"
-    },
-    {
-      "restaurantName": "Test Restaurant",
-      "email": "test_1779447925703@example.com",
-      "password": "$2b$10$Q27sn.r0E3eh7g/pg0NuUet/rAf352yEH5gfhXrYFAi3myhH0kRQW",
-      "phone": "9876543210",
-      "ownerName": "Owner",
-      "resetOtp": null,
-      "resetOtpExpires": null,
-      "status": "active",
-      "createdAt": 1779447925858,
-      "_id": "80e85e804abec231879f98d9",
-      "id": "80e85e804abec231879f98d9",
-      "updatedAt": "2026-05-22T11:06:07.085Z",
-      "name": "Test Restaurant"
-    },
-    {
-      "restaurantName": "Test Restaurant",
-      "email": "test_1779447966855@example.com",
-      "password": "$2b$10$TRF7VbpQHH8H.cLs0Hs52uAqcq0y.pDb4QAyYgSPZhR33XiY0RvKG",
-      "phone": "9876543210",
-      "ownerName": "Owner",
-      "resetOtp": null,
-      "resetOtpExpires": null,
-      "status": "active",
-      "createdAt": 1779447966978,
-      "_id": "b30bc26bab1617e7c3cc8886",
-      "id": "b30bc26bab1617e7c3cc8886",
-      "updatedAt": "2026-05-22T11:06:06.979Z",
-      "name": "Test Restaurant"
-    },
-    {
-      "restaurantName": "Test Restaurant Unique",
-      "email": "test_1779447994590@example.com",
-      "password": "$2b$10$R.8sMzP263wgvIZBDknQHO8/.9Q3zYBJWjD3CG2pQjwKnEfwjyffK",
-      "phone": "9973717312",
-      "ownerName": "Owner",
-      "resetOtp": null,
-      "resetOtpExpires": null,
-      "status": "active",
-      "createdAt": 1779447994687,
-      "_id": "66eda12158eb39df3509dcd9",
-      "id": "66eda12158eb39df3509dcd9",
-      "updatedAt": "2026-05-22T11:06:34.782Z",
-      "name": "Test Restaurant Unique"
-    },
-    {
-      "restaurantName": "Shubham Restaurant",
-      "email": "adhavshubham628@gmail.com",
-      "password": "$2b$10$kjWoIVde8W/luhK0ZEZdAuLi/5M7c.fnyC6mWeenE1a7.rvXCnUcC",
-      "phone": "",
-      "ownerName": "Owner",
-      "resetOtp": "675837",
-      "resetOtpExpires": 1779455210507,
-      "status": "active",
-      "createdAt": 1779454286475,
-      "_id": "bf5e6e44014cea227be22ef9",
-      "id": "bf5e6e44014cea227be22ef9",
-      "updatedAt": "2026-05-22T12:56:50.509Z",
-      "name": "Shubham Restaurant"
     }
   ],
   "QRCode": [
     {
-      "restaurant": "faf13f5bb1db1682fc33749c",
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
       "tableName": "Table 1",
       "section": "Main Area",
       "status": "active",
       "url": "http://localhost:5173/scan/natkhat-t1",
       "totalScans": 42,
       "ordersPlaced": 12,
-      "_id": "46344db106cf4ddcc934f22c",
-      "id": "46344db106cf4ddcc934f22c",
-      "createdAt": "2026-05-22T10:40:57.038Z",
-      "updatedAt": "2026-05-22T10:40:57.038Z"
+      "_id": "d21af1243c285cd60d856de9",
+      "id": "d21af1243c285cd60d856de9",
+      "createdAt": "2026-06-03T10:40:28.861Z",
+      "updatedAt": "2026-06-03T10:40:28.861Z"
     },
     {
-      "restaurant": "ed970d3ecfc74215d1494c81",
+      "restaurant": "e09cb061f119eb2a51df8e99",
       "tableName": "Table 4",
       "section": "Terrace",
       "status": "active",
       "url": "http://localhost:5173/scan/osteria-t4",
       "totalScans": 85,
       "ordersPlaced": 30,
-      "_id": "08fd3de467f87108d0c97d79",
-      "id": "08fd3de467f87108d0c97d79",
-      "createdAt": "2026-05-22T10:40:57.039Z",
-      "updatedAt": "2026-05-22T10:40:57.039Z"
+      "_id": "8bbe9cd05b7c7e2c2f900f76",
+      "id": "8bbe9cd05b7c7e2c2f900f76",
+      "createdAt": "2026-06-03T10:40:28.862Z",
+      "updatedAt": "2026-06-03T10:40:28.862Z"
     }
   ],
   "Order": [
     {
-      "restaurant": "faf13f5bb1db1682fc33749c",
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
       "orderId": "#1204",
       "tableName": "Table 1",
       "customerName": "Aman Saxena",
@@ -315,13 +260,13 @@
       "paymentStatus": "Pending",
       "status": "Preparing",
       "eta": "10 mins",
-      "_id": "68f96f8e5931fce21f5c58b7",
-      "id": "68f96f8e5931fce21f5c58b7",
-      "createdAt": "2026-05-22T10:40:57.040Z",
-      "updatedAt": "2026-05-22T10:40:57.040Z"
+      "_id": "676c96d46d7316c6f9468444",
+      "id": "676c96d46d7316c6f9468444",
+      "createdAt": "2026-06-03T10:40:28.863Z",
+      "updatedAt": "2026-06-03T10:40:28.863Z"
     },
     {
-      "restaurant": "ed970d3ecfc74215d1494c81",
+      "restaurant": "e09cb061f119eb2a51df8e99",
       "orderId": "#1205",
       "tableName": "Table 4",
       "customerName": "Aditi Roy",
@@ -341,22 +286,22 @@
       "paymentStatus": "Paid",
       "status": "New Order",
       "eta": "15 mins",
-      "_id": "0b04f3daf9c1bf2584b0521a",
-      "id": "0b04f3daf9c1bf2584b0521a",
-      "createdAt": "2026-05-22T10:40:57.041Z",
-      "updatedAt": "2026-05-22T10:40:57.041Z"
+      "_id": "98940dcb4799e1ba29b9a9db",
+      "id": "98940dcb4799e1ba29b9a9db",
+      "createdAt": "2026-06-03T10:40:28.864Z",
+      "updatedAt": "2026-06-03T10:40:28.864Z"
     }
   ],
   "SuperAdmin": [
     {
       "name": "Global Administrator",
       "email": "admin@foodaas.com",
-      "password": "$2b$10$n0lE2MiqrSDqpUX8AB8aR./RZiS7ikemmZOvEihZK.lSv17VvnuEO",
+      "password": "$2b$10$w1chL2JqujVMkLJ9lG59aepGdTVNuUB8GycYhy.AhhGq1Y9SkjgCS",
       "role": "SUPER_ADMIN",
-      "_id": "191564105282e426c6d26ede",
-      "id": "191564105282e426c6d26ede",
-      "createdAt": "2026-05-22T10:40:57.009Z",
-      "updatedAt": "2026-05-22T10:40:57.011Z"
+      "_id": "3b951d7cbacff689a9d9aba2",
+      "id": "3b951d7cbacff689a9d9aba2",
+      "createdAt": "2026-06-03T10:40:28.839Z",
+      "updatedAt": "2026-06-03T10:40:28.840Z"
     }
   ],
   "Plan": [
@@ -375,10 +320,10 @@
       "maxBranches": 1,
       "qrLimits": 5,
       "staffLimits": 2,
-      "_id": "04fee4c7e1d04473a2943dca",
-      "id": "04fee4c7e1d04473a2943dca",
-      "createdAt": "2026-05-22T10:40:57.013Z",
-      "updatedAt": "2026-05-22T10:40:57.013Z"
+      "_id": "df97bf4ed5a5edcd3deb4db6",
+      "id": "df97bf4ed5a5edcd3deb4db6",
+      "createdAt": "2026-06-03T10:40:28.841Z",
+      "updatedAt": "2026-06-03T10:40:28.841Z"
     },
     {
       "name": "Pro Plan",
@@ -396,10 +341,10 @@
       "maxBranches": 5,
       "qrLimits": 25,
       "staffLimits": 10,
-      "_id": "fc27e1c6650d11fdb811b0a4",
-      "id": "fc27e1c6650d11fdb811b0a4",
-      "createdAt": "2026-05-22T10:40:57.015Z",
-      "updatedAt": "2026-05-22T10:40:57.015Z"
+      "_id": "108fb2180423a9f3fbf33a3b",
+      "id": "108fb2180423a9f3fbf33a3b",
+      "createdAt": "2026-06-03T10:40:28.842Z",
+      "updatedAt": "2026-06-03T10:40:28.842Z"
     },
     {
       "name": "Enterprise Plan",
@@ -417,213 +362,213 @@
       "maxBranches": 999,
       "qrLimits": 999,
       "staffLimits": 999,
-      "_id": "675519dda53e4f8108348fe2",
-      "id": "675519dda53e4f8108348fe2",
-      "createdAt": "2026-05-22T10:40:57.017Z",
-      "updatedAt": "2026-05-22T10:40:57.017Z"
+      "_id": "37424f77237c068588896f73",
+      "id": "37424f77237c068588896f73",
+      "createdAt": "2026-06-03T10:40:28.842Z",
+      "updatedAt": "2026-06-03T10:40:28.842Z"
     }
   ],
   "Branch": [
     {
-      "restaurant": "faf13f5bb1db1682fc33749c",
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
       "branchName": "natkhat - Sector 62",
       "location": "Noida",
       "status": "active",
       "tablesCount": 12,
       "staffCount": 4,
-      "_id": "c43e63289332ef294b79861c",
-      "id": "c43e63289332ef294b79861c",
-      "createdAt": "2026-05-22T10:40:57.024Z",
-      "updatedAt": "2026-05-22T10:40:57.024Z"
+      "_id": "6b8c71f06bc064d04ac69cbb",
+      "id": "6b8c71f06bc064d04ac69cbb",
+      "createdAt": "2026-06-03T10:40:28.846Z",
+      "updatedAt": "2026-06-03T10:40:28.846Z"
     },
     {
-      "restaurant": "faf13f5bb1db1682fc33749c",
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
       "branchName": "natkhat - Indirapuram",
       "location": "Ghaziabad",
       "status": "active",
       "tablesCount": 8,
       "staffCount": 3,
-      "_id": "a6f1f01d9b3cbe01c920f750",
-      "id": "a6f1f01d9b3cbe01c920f750",
-      "createdAt": "2026-05-22T10:40:57.025Z",
-      "updatedAt": "2026-05-22T10:40:57.025Z"
+      "_id": "37ed431e10b11de314557230",
+      "id": "37ed431e10b11de314557230",
+      "createdAt": "2026-06-03T10:40:28.847Z",
+      "updatedAt": "2026-06-03T10:40:28.847Z"
     },
     {
-      "restaurant": "ed970d3ecfc74215d1494c81",
+      "restaurant": "e09cb061f119eb2a51df8e99",
       "branchName": "Osteria - Connaught Place",
       "location": "New Delhi",
       "status": "active",
       "tablesCount": 20,
       "staffCount": 8,
-      "_id": "eafcfbc48bad1adcc298c7b6",
-      "id": "eafcfbc48bad1adcc298c7b6",
-      "createdAt": "2026-05-22T10:40:57.025Z",
-      "updatedAt": "2026-05-22T10:40:57.025Z"
+      "_id": "520cccd0f6a13a38fd0ecb2b",
+      "id": "520cccd0f6a13a38fd0ecb2b",
+      "createdAt": "2026-06-03T10:40:28.848Z",
+      "updatedAt": "2026-06-03T10:40:28.848Z"
     },
     {
-      "restaurant": "ed970d3ecfc74215d1494c81",
+      "restaurant": "e09cb061f119eb2a51df8e99",
       "branchName": "Osteria - DLF Phase 3",
       "location": "Gurugram",
       "status": "active",
       "tablesCount": 15,
       "staffCount": 6,
-      "_id": "e786d60d301944c489df8467",
-      "id": "e786d60d301944c489df8467",
-      "createdAt": "2026-05-22T10:40:57.026Z",
-      "updatedAt": "2026-05-22T10:40:57.026Z"
+      "_id": "17c6f6e463e6fc08dfdb571b",
+      "id": "17c6f6e463e6fc08dfdb571b",
+      "createdAt": "2026-06-03T10:40:28.848Z",
+      "updatedAt": "2026-06-03T10:40:28.848Z"
     },
     {
-      "restaurant": "656336b5aadaa2e720f5ba4d",
+      "restaurant": "647a26f0728d259e7589dac5",
       "branchName": "Spice Route - Mall Road",
       "location": "Shimla",
       "status": "inactive",
       "tablesCount": 6,
       "staffCount": 2,
-      "_id": "6c26bae54b95a76c785b97b2",
-      "id": "6c26bae54b95a76c785b97b2",
-      "createdAt": "2026-05-22T10:40:57.027Z",
-      "updatedAt": "2026-05-22T10:40:57.027Z"
+      "_id": "bde0e313de0c3063243ba7b1",
+      "id": "bde0e313de0c3063243ba7b1",
+      "createdAt": "2026-06-03T10:40:28.849Z",
+      "updatedAt": "2026-06-03T10:40:28.849Z"
     },
     {
-      "restaurant": "56e3a15d39205e58b3162298",
+      "restaurant": "2b35373fce22a66c3d2b3e05",
       "branchName": "Sushi House - MG Road",
       "location": "Bengaluru",
       "status": "active",
       "tablesCount": 10,
       "staffCount": 4,
-      "_id": "9ac4a32d00908c0a29a5ebe0",
-      "id": "9ac4a32d00908c0a29a5ebe0",
-      "createdAt": "2026-05-22T10:40:57.027Z",
-      "updatedAt": "2026-05-22T10:40:57.027Z"
+      "_id": "3c402eee6e90db1850898ee9",
+      "id": "3c402eee6e90db1850898ee9",
+      "createdAt": "2026-06-03T10:40:28.849Z",
+      "updatedAt": "2026-06-03T10:40:28.849Z"
     },
     {
-      "restaurant": "9e023c33bee17813d557d1a1",
+      "restaurant": "fe9750b1af36f9e1dbd2c818",
       "branchName": "Burger Club - Saket",
       "location": "New Delhi",
       "status": "active",
       "tablesCount": 8,
       "staffCount": 3,
-      "_id": "4a0cc281364b352c2e2daccb",
-      "id": "4a0cc281364b352c2e2daccb",
-      "createdAt": "2026-05-22T10:40:57.028Z",
-      "updatedAt": "2026-05-22T10:40:57.028Z"
+      "_id": "6ad27dc7b34a2e27a1db1235",
+      "id": "6ad27dc7b34a2e27a1db1235",
+      "createdAt": "2026-06-03T10:40:28.850Z",
+      "updatedAt": "2026-06-03T10:40:28.850Z"
     }
   ],
   "Payment": [
     {
-      "restaurant": "faf13f5bb1db1682fc33749c",
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
       "amount": 2499,
       "status": "Completed",
       "method": "UPI",
-      "date": "2026-04-07T10:40:57.029Z",
-      "_id": "434b960575660b8aa21bf765",
-      "id": "434b960575660b8aa21bf765",
-      "createdAt": "2026-05-22T10:40:57.029Z",
-      "updatedAt": "2026-05-22T10:40:57.029Z"
+      "date": "2026-04-19T10:40:28.851Z",
+      "_id": "5332af9bd9cda3348ad7bf26",
+      "id": "5332af9bd9cda3348ad7bf26",
+      "createdAt": "2026-06-03T10:40:28.851Z",
+      "updatedAt": "2026-06-03T10:40:28.851Z"
     },
     {
-      "restaurant": "faf13f5bb1db1682fc33749c",
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
       "amount": 2499,
       "status": "Completed",
       "method": "UPI",
-      "date": "2026-05-07T10:40:57.029Z",
-      "_id": "2490ea218ffc107fc51865a9",
-      "id": "2490ea218ffc107fc51865a9",
-      "createdAt": "2026-05-22T10:40:57.030Z",
-      "updatedAt": "2026-05-22T10:40:57.030Z"
+      "date": "2026-05-19T10:40:28.851Z",
+      "_id": "270461400092f0c461c28f56",
+      "id": "270461400092f0c461c28f56",
+      "createdAt": "2026-06-03T10:40:28.852Z",
+      "updatedAt": "2026-06-03T10:40:28.852Z"
     },
     {
-      "restaurant": "ed970d3ecfc74215d1494c81",
+      "restaurant": "e09cb061f119eb2a51df8e99",
       "amount": 5999,
       "status": "Completed",
       "method": "Bank Transfer",
-      "date": "2026-04-17T10:40:57.029Z",
-      "_id": "80fd3314d9d665ebc88bbbfa",
-      "id": "80fd3314d9d665ebc88bbbfa",
-      "createdAt": "2026-05-22T10:40:57.030Z",
-      "updatedAt": "2026-05-22T10:40:57.030Z"
+      "date": "2026-04-29T10:40:28.851Z",
+      "_id": "9f025e0fca68de7a56eb965f",
+      "id": "9f025e0fca68de7a56eb965f",
+      "createdAt": "2026-06-03T10:40:28.853Z",
+      "updatedAt": "2026-06-03T10:40:28.853Z"
     },
     {
-      "restaurant": "ed970d3ecfc74215d1494c81",
+      "restaurant": "e09cb061f119eb2a51df8e99",
       "amount": 5999,
       "status": "Completed",
       "method": "Card",
-      "date": "2026-05-17T10:40:57.029Z",
-      "_id": "ecc20ab53aaf5ec667eda605",
-      "id": "ecc20ab53aaf5ec667eda605",
-      "createdAt": "2026-05-22T10:40:57.031Z",
-      "updatedAt": "2026-05-22T10:40:57.031Z"
+      "date": "2026-05-29T10:40:28.851Z",
+      "_id": "8fe6a3afd6799e78af1f2716",
+      "id": "8fe6a3afd6799e78af1f2716",
+      "createdAt": "2026-06-03T10:40:28.855Z",
+      "updatedAt": "2026-06-03T10:40:28.855Z"
     },
     {
-      "restaurant": "656336b5aadaa2e720f5ba4d",
+      "restaurant": "647a26f0728d259e7589dac5",
       "amount": 999,
       "status": "Completed",
       "method": "Cash",
-      "date": "2026-02-26T10:40:57.029Z",
-      "_id": "386fbaf291a63d2484831b08",
-      "id": "386fbaf291a63d2484831b08",
-      "createdAt": "2026-05-22T10:40:57.032Z",
-      "updatedAt": "2026-05-22T10:40:57.032Z"
+      "date": "2026-03-10T10:40:28.851Z",
+      "_id": "53b6bfa8cbd07a3076f1825f",
+      "id": "53b6bfa8cbd07a3076f1825f",
+      "createdAt": "2026-06-03T10:40:28.857Z",
+      "updatedAt": "2026-06-03T10:40:28.857Z"
     },
     {
-      "restaurant": "656336b5aadaa2e720f5ba4d",
+      "restaurant": "647a26f0728d259e7589dac5",
       "amount": 999,
       "status": "Completed",
       "method": "UPI",
-      "date": "2026-03-28T10:40:57.029Z",
-      "_id": "9d7de48d7c9cf6dd5eb50489",
-      "id": "9d7de48d7c9cf6dd5eb50489",
-      "createdAt": "2026-05-22T10:40:57.032Z",
-      "updatedAt": "2026-05-22T10:40:57.032Z"
+      "date": "2026-04-09T10:40:28.851Z",
+      "_id": "86638e7c57ed27fdc65a476f",
+      "id": "86638e7c57ed27fdc65a476f",
+      "createdAt": "2026-06-03T10:40:28.857Z",
+      "updatedAt": "2026-06-03T10:40:28.858Z"
     },
     {
-      "restaurant": "656336b5aadaa2e720f5ba4d",
+      "restaurant": "647a26f0728d259e7589dac5",
       "amount": 999,
       "status": "Failed",
       "method": "UPI",
-      "date": "2026-04-27T10:40:57.029Z",
-      "_id": "ec082a80c9564c61b15ac748",
-      "id": "ec082a80c9564c61b15ac748",
-      "createdAt": "2026-05-22T10:40:57.033Z",
-      "updatedAt": "2026-05-22T10:40:57.033Z"
+      "date": "2026-05-09T10:40:28.851Z",
+      "_id": "21922e340f7bb2f9af9ce4b0",
+      "id": "21922e340f7bb2f9af9ce4b0",
+      "createdAt": "2026-06-03T10:40:28.858Z",
+      "updatedAt": "2026-06-03T10:40:28.858Z"
     },
     {
-      "restaurant": "56e3a15d39205e58b3162298",
+      "restaurant": "2b35373fce22a66c3d2b3e05",
       "amount": 2499,
       "status": "Completed",
       "method": "Card",
-      "date": "2026-04-12T10:40:57.029Z",
-      "_id": "2eb8fdfeac3e212af712aefc",
-      "id": "2eb8fdfeac3e212af712aefc",
-      "createdAt": "2026-05-22T10:40:57.034Z",
-      "updatedAt": "2026-05-22T10:40:57.034Z"
+      "date": "2026-04-24T10:40:28.851Z",
+      "_id": "5b4fa986112390af64eca996",
+      "id": "5b4fa986112390af64eca996",
+      "createdAt": "2026-06-03T10:40:28.859Z",
+      "updatedAt": "2026-06-03T10:40:28.859Z"
     },
     {
-      "restaurant": "56e3a15d39205e58b3162298",
+      "restaurant": "2b35373fce22a66c3d2b3e05",
       "amount": 2499,
       "status": "Failed",
       "method": "UPI",
-      "date": "2026-05-12T10:40:57.029Z",
-      "_id": "cac910fac15b4e87ea74e44f",
-      "id": "cac910fac15b4e87ea74e44f",
-      "createdAt": "2026-05-22T10:40:57.035Z",
-      "updatedAt": "2026-05-22T10:40:57.035Z"
+      "date": "2026-05-24T10:40:28.851Z",
+      "_id": "5585118da837d8a13d764fb9",
+      "id": "5585118da837d8a13d764fb9",
+      "createdAt": "2026-06-03T10:40:28.860Z",
+      "updatedAt": "2026-06-03T10:40:28.860Z"
     },
     {
-      "restaurant": "9e023c33bee17813d557d1a1",
+      "restaurant": "fe9750b1af36f9e1dbd2c818",
       "amount": 2499,
       "status": "Completed",
       "method": "UPI",
-      "date": "2026-05-20T10:40:57.029Z",
-      "_id": "443058067792883cd9ef454b",
-      "id": "443058067792883cd9ef454b",
-      "createdAt": "2026-05-22T10:40:57.036Z",
-      "updatedAt": "2026-05-22T10:40:57.036Z"
+      "date": "2026-06-01T10:40:28.851Z",
+      "_id": "8c68421607419177dcb85fdf",
+      "id": "8c68421607419177dcb85fdf",
+      "createdAt": "2026-06-03T10:40:28.860Z",
+      "updatedAt": "2026-06-03T10:40:28.860Z"
     }
   ],
   "SupportTicket": [
     {
-      "restaurant": "faf13f5bb1db1682fc33749c",
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
       "title": "UPI Payment issue on renewal",
       "description": "I sent the payment of ₹2499 through UPI but my plan validity did not update automatically. Please check and extend the expiry.",
       "category": "Billing",
@@ -633,16 +578,16 @@
         {
           "sender": "Restaurant",
           "text": "I made the transaction under ID UPI-992384. Please verify.",
-          "createdAt": "2026-05-21T10:40:57.042Z"
+          "createdAt": "2026-06-02T10:40:28.865Z"
         }
       ],
-      "_id": "e72f1037f8858359e20ad864",
-      "id": "e72f1037f8858359e20ad864",
-      "createdAt": "2026-05-22T10:40:57.042Z",
-      "updatedAt": "2026-05-22T10:40:57.042Z"
+      "_id": "5cf370fce48a9bb3210c4672",
+      "id": "5cf370fce48a9bb3210c4672",
+      "createdAt": "2026-06-03T10:40:28.865Z",
+      "updatedAt": "2026-06-03T10:40:28.865Z"
     },
     {
-      "restaurant": "ed970d3ecfc74215d1494c81",
+      "restaurant": "e09cb061f119eb2a51df8e99",
       "title": "Customizing QR code templates",
       "description": "How do I add our custom logo in the center of the QR code image? The option is greyed out.",
       "category": "QR Code",
@@ -652,21 +597,21 @@
         {
           "sender": "Restaurant",
           "text": "Please activate custom QR design.",
-          "createdAt": "2026-05-20T10:40:57.044Z"
+          "createdAt": "2026-06-01T10:40:28.866Z"
         },
         {
           "sender": "SuperAdmin",
           "text": "Hi Giovanni, custom QR design is exclusive to the Enterprise Plan. We see you are on Enterprise, so it should be active. Let us check.",
-          "createdAt": "2026-05-21T10:40:57.044Z"
+          "createdAt": "2026-06-02T10:40:28.866Z"
         }
       ],
-      "_id": "2d5c1dbeaf84e492e48224ad",
-      "id": "2d5c1dbeaf84e492e48224ad",
-      "createdAt": "2026-05-22T10:40:57.044Z",
-      "updatedAt": "2026-05-22T10:40:57.044Z"
+      "_id": "b29daa3d6a25e9a4a6002928",
+      "id": "b29daa3d6a25e9a4a6002928",
+      "createdAt": "2026-06-03T10:40:28.866Z",
+      "updatedAt": "2026-06-03T10:40:28.866Z"
     },
     {
-      "restaurant": "56e3a15d39205e58b3162298",
+      "restaurant": "2b35373fce22a66c3d2b3e05",
       "title": "SMTP settings connection timeout",
       "description": "We get a connection timeout error when saving our custom mail server settings.",
       "category": "Technical",
@@ -676,23 +621,23 @@
         {
           "sender": "Restaurant",
           "text": "Error code: ETIMEDOUT 587.",
-          "createdAt": "2026-05-17T10:40:57.045Z"
+          "createdAt": "2026-05-29T10:40:28.867Z"
         },
         {
           "sender": "SuperAdmin",
           "text": "This happens if port 587 is blocked by your email provider, or if SSL/TLS toggle is mismatched. Try port 465 with SSL enabled.",
-          "createdAt": "2026-05-18T10:40:57.045Z"
+          "createdAt": "2026-05-30T10:40:28.867Z"
         },
         {
           "sender": "Restaurant",
           "text": "Port 465 worked perfectly. Thanks for the quick support!",
-          "createdAt": "2026-05-19T10:40:57.045Z"
+          "createdAt": "2026-05-31T10:40:28.867Z"
         }
       ],
-      "_id": "a84a9067af16e3410e732edb",
-      "id": "a84a9067af16e3410e732edb",
-      "createdAt": "2026-05-22T10:40:57.045Z",
-      "updatedAt": "2026-05-22T10:40:57.045Z"
+      "_id": "7eeb8571b59dc99990f2be1f",
+      "id": "7eeb8571b59dc99990f2be1f",
+      "createdAt": "2026-06-03T10:40:28.867Z",
+      "updatedAt": "2026-06-03T10:40:28.867Z"
     }
   ],
   "Notification": [
@@ -701,21 +646,21 @@
       "message": "Platform database optimization is scheduled for Sunday at 02:00 AM. Expect up to 10 minutes of intermittent connectivity.",
       "type": "global",
       "isRead": false,
-      "_id": "56294f7de0031276b2e8974d",
-      "id": "56294f7de0031276b2e8974d",
-      "createdAt": "2026-05-22T10:40:57.048Z",
-      "updatedAt": "2026-05-22T10:40:57.048Z"
+      "_id": "a58155da967ccef93ecae74a",
+      "id": "a58155da967ccef93ecae74a",
+      "createdAt": "2026-06-03T10:40:28.869Z",
+      "updatedAt": "2026-06-03T10:40:28.869Z"
     },
     {
       "title": "Sushi House subscription expired",
       "message": "Sushi House subscription has expired. Grace period is active for 3 more days.",
       "type": "expiry",
-      "recipient": "56e3a15d39205e58b3162298",
+      "recipient": "2b35373fce22a66c3d2b3e05",
       "isRead": false,
-      "_id": "163f4201ab56492f6ab12935",
-      "id": "163f4201ab56492f6ab12935",
-      "createdAt": "2026-05-22T10:40:57.049Z",
-      "updatedAt": "2026-05-22T10:40:57.049Z"
+      "_id": "15e232bef1a9122d1502c0e3",
+      "id": "15e232bef1a9122d1502c0e3",
+      "createdAt": "2026-06-03T10:40:28.871Z",
+      "updatedAt": "2026-06-03T10:40:28.871Z"
     }
   ],
   "AuditLog": [
@@ -723,46 +668,46 @@
       "action": "Database Seeded",
       "details": "Initial sandbox database initialized with premium seed data",
       "performedBy": "System",
-      "_id": "70920e29bba37498de29d3d5",
-      "id": "70920e29bba37498de29d3d5",
-      "createdAt": "2026-05-22T10:40:57.052Z",
-      "updatedAt": "2026-05-22T10:40:57.052Z"
+      "_id": "9fa131b0c59f9e2a08ddc054",
+      "id": "9fa131b0c59f9e2a08ddc054",
+      "createdAt": "2026-06-03T10:40:28.873Z",
+      "updatedAt": "2026-06-03T10:40:28.873Z"
     },
     {
       "action": "Create Plan",
       "details": "Created Basic, Pro and Enterprise pricing structures",
       "performedBy": "Global Administrator",
-      "_id": "e3239a07c8c0b101d9053e76",
-      "id": "e3239a07c8c0b101d9053e76",
-      "createdAt": "2026-05-22T10:40:57.054Z",
-      "updatedAt": "2026-05-22T10:40:57.054Z"
+      "_id": "5de53cb2c9ecd6e7c8a4a8f8",
+      "id": "5de53cb2c9ecd6e7c8a4a8f8",
+      "createdAt": "2026-06-03T10:40:28.875Z",
+      "updatedAt": "2026-06-03T10:40:28.875Z"
     },
     {
       "action": "Create Restaurant",
       "details": "Registered natkhat and Osteria Bella accounts",
       "performedBy": "Global Administrator",
-      "_id": "9a8f714cce2957c331bd89ed",
-      "id": "9a8f714cce2957c331bd89ed",
-      "createdAt": "2026-05-22T10:40:57.055Z",
-      "updatedAt": "2026-05-22T10:40:57.055Z"
+      "_id": "7c1ee6b774f03f95df3345f8",
+      "id": "7c1ee6b774f03f95df3345f8",
+      "createdAt": "2026-06-03T10:40:28.876Z",
+      "updatedAt": "2026-06-03T10:40:28.876Z"
     },
     {
       "action": "Auto-Expiry Check",
       "details": "Flagged Sushi House subscription as expired",
       "performedBy": "System Cron",
-      "_id": "5bc12ac6987401bfe33af717",
-      "id": "5bc12ac6987401bfe33af717",
-      "createdAt": "2026-05-22T10:40:57.056Z",
-      "updatedAt": "2026-05-22T10:40:57.056Z"
+      "_id": "613d3ef313e04b6c64fc9c1b",
+      "id": "613d3ef313e04b6c64fc9c1b",
+      "createdAt": "2026-06-03T10:40:28.877Z",
+      "updatedAt": "2026-06-03T10:40:28.877Z"
     },
     {
-      "action": "Extend Subscription",
-      "details": "Extended subscription of Spice Route by 60 days",
+      "action": "Login",
+      "details": "Super Admin admin@foodaas.com logged in successfully",
       "performedBy": "Super Admin",
-      "_id": "6660786a9c780a5119f1939b",
-      "id": "6660786a9c780a5119f1939b",
-      "createdAt": "2026-05-22T10:47:52.771Z",
-      "updatedAt": "2026-05-22T10:47:52.771Z"
+      "_id": "e8ae906e50f11e5ad829daa0",
+      "id": "e8ae906e50f11e5ad829daa0",
+      "createdAt": "2026-06-03T10:45:23.656Z",
+      "updatedAt": "2026-06-03T10:45:23.656Z"
     }
   ]
 }
