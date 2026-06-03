@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link, Outlet, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { io } from 'socket.io-client';
 import {
   ChefHat,
   LayoutDashboard,
@@ -30,6 +31,8 @@ const DashboardLayout = () => {
   const location = useLocation();
   const [liveOrders, setLiveOrders] = useState([]);
   const [liveOrdersExpanded, setLiveOrdersExpanded] = useState(true);
+  const [alerts, setAlerts] = useState([]);
+  const [expandedGroups, setExpandedGroups] = useState({});
 
   const handleLogout = () => {
     logout();
@@ -52,6 +55,26 @@ const DashboardLayout = () => {
   };
 
   const activeTab = getActiveTab();
+
+  // Socket.IO for low stock alerts
+  useEffect(() => {
+    if (restaurant && (restaurant._id || restaurant.id)) {
+      const restaurantId = restaurant._id || restaurant.id;
+      const socket = io('http://localhost:5000');
+      
+      socket.emit('joinRestaurantRoom', restaurantId);
+
+      socket.on('low_stock_alert', (notification) => {
+        setAlerts(prev => [...prev, notification]);
+      });
+
+      socket.on('alert_resolved', (data) => {
+        setAlerts(prev => prev.filter(n => n.productName !== data.productName));
+      });
+
+      return () => socket.disconnect();
+    }
+  }, [restaurant]);
 
   // Fetch live orders for the sidebar mini-panel
   const fetchLiveOrders = async () => {
@@ -89,6 +112,52 @@ const DashboardLayout = () => {
     }
   }, [loading, restaurant]);
 
+  const navGroups = [
+    {
+      name: 'Operations',
+      items: [
+        { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', tab: 'dashboard' },
+        { to: '/dashboard/orders', icon: ClipboardList, label: 'Orders', tab: 'orders' },
+        { to: '/dashboard/tables', icon: Grid2X2, label: 'Tables', tab: 'tables' },
+      ]
+    },
+    {
+      name: 'Management',
+      items: [
+        { to: '/dashboard/menu', icon: UtensilsCrossed, label: 'Kitchen', tab: 'menu' }, 
+        { to: '/dashboard/qr-codes', icon: QrCode, label: 'QR Codes', tab: 'qrcodes' },
+        { to: '/dashboard/customers', icon: Users, label: 'Customers', tab: 'customers' },
+      ]
+    },
+    {
+      name: 'Settings & Reports',
+      items: [
+        { to: '/dashboard/billing', icon: CreditCard, label: 'Billing', tab: 'billing' },
+        { to: '/dashboard/reports', icon: BarChart, label: 'Reports', tab: 'reports' },
+        { to: '/dashboard/settings', icon: SettingsIcon, label: 'Settings', tab: 'settings' }
+      ]
+    }
+  ];
+
+  useEffect(() => {
+    // Auto-expand the active group
+    const newExpanded = { ...expandedGroups };
+    let changed = false;
+    navGroups.forEach(group => {
+      if (group.items.some(item => item.tab === activeTab)) {
+        if (!newExpanded[group.name]) {
+          newExpanded[group.name] = true;
+          changed = true;
+        }
+      }
+    });
+    if (changed) setExpandedGroups(newExpanded);
+  }, [activeTab]);
+
+  const toggleGroup = (groupName) => {
+    setExpandedGroups(prev => ({ ...prev, [groupName]: !prev[groupName] }));
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
@@ -100,54 +169,76 @@ const DashboardLayout = () => {
     );
   }
 
-  const navItems = [
-    { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', tab: 'dashboard' },
-    { to: '/dashboard/orders', icon: ClipboardList, label: 'Orders', tab: 'orders' },
-    { to: '/dashboard/tables', icon: Grid2X2, label: 'Tables', tab: 'tables' },
-    { to: '/dashboard/menu', icon: UtensilsCrossed, label: 'Kitchen', tab: 'menu' }, 
-    { to: '/dashboard/qr-codes', icon: QrCode, label: 'QR Codes', tab: 'qrcodes' },
-    { to: '/dashboard/customers', icon: Users, label: 'Customers', tab: 'customers' },
-    { to: '/dashboard/billing', icon: CreditCard, label: 'Billing', tab: 'billing' },
-    { to: '/dashboard/reports', icon: BarChart, label: 'Reports', tab: 'reports' },
-    { to: '/dashboard/settings', icon: SettingsIcon, label: 'Settings', tab: 'settings' }
-  ];
-
   return (
     <div className="min-h-screen flex bg-[#F8FAFC] font-sans overflow-hidden">
       {/* Premium Sidebar */}
       <aside className="w-64 bg-[#111827] text-slate-300 flex flex-col justify-between transition-all duration-300 shadow-2xl z-30 shrink-0">
         <div className="flex flex-col flex-1 min-h-0">
-          {/* Logo */}
-          <div className="p-6 flex items-center gap-3 text-white border-b border-slate-800/50 shrink-0">
-            <div className="p-2 bg-gradient-to-br from-[#6C4DFF] to-indigo-600 rounded-xl shadow-lg shadow-indigo-500/30">
-              <ChefHat size={24} className="text-white" />
+          {/* Logo & Notifications */}
+          <div className="p-6 flex items-center justify-between text-white border-b border-slate-800/50 shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-[#6C4DFF] to-indigo-600 rounded-xl shadow-lg shadow-indigo-500/30">
+                <ChefHat size={24} className="text-white" />
+              </div>
+              <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">FoodaaS</span>
             </div>
-            <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">FoodaaS</span>
+            
+            {/* Notification Bell */}
+            <div className="relative cursor-pointer hover:bg-slate-800 p-2 rounded-full transition-colors group">
+              <Bell size={20} className="text-slate-400 group-hover:text-white" />
+              {alerts.length > 0 && (
+                <>
+                  <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse border border-slate-900"></span>
+                  {/* Tooltip for alerts */}
+                  <div className="absolute left-full ml-2 top-0 bg-slate-800 text-white text-xs rounded-lg p-3 w-48 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                    <p className="font-bold mb-1 border-b border-slate-700 pb-1">Alerts ({alerts.length})</p>
+                    {alerts.map((a, i) => (
+                      <p key={i} className="text-[10px] text-slate-300 py-1 truncate">{a.message || a.title}</p>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
-          {/* Nav Items */}
-          <nav className="px-4 py-6 space-y-1.5 shrink-0">
-            {navItems.map(item => (
-              <Link
-                key={item.tab}
-                to={item.to}
-                className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group ${
-                  activeTab === item.tab
-                    ? 'bg-gradient-to-r from-[#6C4DFF] to-[#5235DB] text-white shadow-xl shadow-indigo-500/20'
-                    : 'hover:bg-slate-800/50 hover:text-white text-slate-400'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <item.icon size={20} className={activeTab === item.tab ? 'text-white' : 'text-slate-400 group-hover:text-white'} />
-                  <span className="font-semibold text-sm">{item.label}</span>
-                </div>
-                {activeTab === item.tab && <div className="w-1.5 h-1.5 rounded-full bg-white"></div>}
-              </Link>
+          {/* Nav Items Grouped */}
+          <nav className="px-4 py-6 space-y-4 shrink-0 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+            {navGroups.map((group) => (
+              <div key={group.name} className="space-y-1.5">
+                <button
+                  onClick={() => toggleGroup(group.name)}
+                  className="flex items-center justify-between w-full px-2 py-1 text-xs font-bold text-slate-500 uppercase tracking-wider hover:text-slate-300 transition-colors"
+                >
+                  {group.name}
+                  {expandedGroups[group.name] ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                </button>
+                {expandedGroups[group.name] && (
+                  <div className="space-y-1.5 mt-1">
+                    {group.items.map(item => (
+                      <Link
+                        key={item.tab}
+                        to={item.to}
+                        className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group ${
+                          activeTab === item.tab
+                            ? 'bg-gradient-to-r from-[#6C4DFF] to-[#5235DB] text-white shadow-xl shadow-indigo-500/20'
+                            : 'hover:bg-slate-800/50 hover:text-white text-slate-400'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <item.icon size={20} className={activeTab === item.tab ? 'text-white' : 'text-slate-400 group-hover:text-white'} />
+                          <span className="font-semibold text-sm">{item.label}</span>
+                        </div>
+                        {activeTab === item.tab && <div className="w-1.5 h-1.5 rounded-full bg-white"></div>}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
 
           {/* Live Orders Mini-Panel */}
-          <div className="px-4 flex-1 min-h-0 flex flex-col overflow-hidden">
+          <div className="px-4 pb-4 flex flex-col overflow-hidden max-h-48 border-t border-slate-800/50 pt-4">
             <button
               onClick={() => setLiveOrdersExpanded(!liveOrdersExpanded)}
               className="flex items-center justify-between w-full px-3 py-2 mb-2 rounded-lg hover:bg-slate-800/50 transition-colors shrink-0"
@@ -165,8 +256,8 @@ const DashboardLayout = () => {
             {liveOrdersExpanded && (
               <div className="flex-1 overflow-y-auto space-y-2 pr-1 pb-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
                 {liveOrders.length === 0 ? (
-                  <div className="text-center py-6">
-                    <Radio size={24} className="text-slate-600 mx-auto mb-2" />
+                  <div className="text-center py-2">
+                    <Radio size={20} className="text-slate-600 mx-auto mb-2" />
                     <p className="text-xs text-slate-600 font-medium">No active orders</p>
                   </div>
                 ) : (

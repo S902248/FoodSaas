@@ -52,6 +52,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/menu', require('./routes/foodRoutes'));
+app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
 app.use('/api/qrcodes', require('./routes/qrRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));

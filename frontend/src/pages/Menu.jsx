@@ -16,6 +16,11 @@ const Menu = () => {
   const { restaurant } = useContext(AuthContext);
 
   const [menuItems, setMenuItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [standaloneCategoryName, setStandaloneCategoryName] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
@@ -33,7 +38,43 @@ const Menu = () => {
 
   useEffect(() => {
     fetchMenu();
+    fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/categories');
+      setCategories(res.data);
+    } catch (err) {
+      console.error('Error fetching categories', err);
+    }
+  };
+
+  const handleAddCategory = async () => {
+    if (!newCategoryName.trim()) return;
+    try {
+      const res = await axios.post('http://localhost:5000/api/categories', { name: newCategoryName });
+      setCategories([...categories, res.data]);
+      setCategory(res.data.name); // Auto-select the newly added category
+      setIsAddingCategory(false);
+      setNewCategoryName('');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Error adding category');
+    }
+  };
+
+  const handleSaveStandaloneCategory = async (e) => {
+    e.preventDefault();
+    if (!standaloneCategoryName.trim()) return;
+    try {
+      const res = await axios.post('http://localhost:5000/api/categories', { name: standaloneCategoryName });
+      setCategories([...categories, res.data]);
+      setIsCategoryModalOpen(false);
+      setStandaloneCategoryName('');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Error adding category');
+    }
+  };
 
   const fetchMenu = async () => {
     try {
@@ -49,6 +90,8 @@ const Menu = () => {
     setName('');
     setPrice('');
     setCategory('');
+    setIsAddingCategory(false);
+    setNewCategoryName('');
     setImage('');
     setUploadError('');
     setUploadProgress(0);
@@ -60,6 +103,8 @@ const Menu = () => {
     setName(item.name);
     setPrice(item.price);
     setCategory(item.category);
+    setIsAddingCategory(false);
+    setNewCategoryName('');
     setImage(item.image || '');
     setUploadError('');
     setUploadProgress(0);
@@ -187,20 +232,36 @@ const Menu = () => {
             <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Menu Management</h1>
             <p className="text-slate-500 mt-1">Manage your food items and categories</p>
           </div>
-          <button
-            onClick={() => {
-              if (restaurant?.status && restaurant?.status !== 'active') {
-                alert(`Your plan is currently ${restaurant?.status}. You cannot add new menu items.`);
-                return;
-              }
-              openAddModal();
-            }}
-            disabled={restaurant?.status && restaurant?.status !== 'active'}
-            className="flex items-center gap-2 bg-[#6C4DFF] hover:bg-indigo-700 disabled:bg-slate-350 disabled:cursor-not-allowed disabled:hover:bg-slate-350 text-white px-5 py-2.5 rounded-xl shadow-md transition-all font-semibold"
-          >
-            <Plus size={20} />
-            <span className="font-medium">Add Item</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => {
+                if (restaurant?.status && restaurant?.status !== 'active') {
+                  alert(`Your plan is currently ${restaurant?.status}. You cannot add new categories.`);
+                  return;
+                }
+                setIsCategoryModalOpen(true);
+              }}
+              disabled={restaurant?.status && restaurant?.status !== 'active'}
+              className="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed text-slate-700 px-5 py-2.5 rounded-xl shadow-sm transition-all font-semibold"
+            >
+              <Plus size={20} className="text-[#6C4DFF]" />
+              <span className="font-medium">Add Category</span>
+            </button>
+            <button
+              onClick={() => {
+                if (restaurant?.status && restaurant?.status !== 'active') {
+                  alert(`Your plan is currently ${restaurant?.status}. You cannot add new menu items.`);
+                  return;
+                }
+                openAddModal();
+              }}
+              disabled={restaurant?.status && restaurant?.status !== 'active'}
+              className="flex items-center gap-2 bg-[#6C4DFF] hover:bg-indigo-700 disabled:bg-slate-350 disabled:cursor-not-allowed disabled:hover:bg-slate-350 text-white px-5 py-2.5 rounded-xl shadow-md transition-all font-semibold"
+            >
+              <Plus size={20} />
+              <span className="font-medium">Add Item</span>
+            </button>
+          </div>
         </header>
 
         {restaurant?.status && restaurant?.status !== 'active' && (
@@ -322,12 +383,17 @@ const Menu = () => {
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-1.5">Category</label>
-                  <input
-                    type="text" required
-                    value={category} onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#6C4DFF]/20 focus:border-[#6C4DFF] transition-all outline-none text-sm bg-slate-50/30"
-                    placeholder="e.g. Burgers"
-                  />
+                  <select
+                    required
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#6C4DFF]/20 focus:border-[#6C4DFF] transition-all outline-none text-sm bg-slate-50/30 appearance-none"
+                  >
+                    <option value="" disabled>Select a Category</option>
+                    {categories.map((c) => (
+                      <option key={c._id} value={c.name}>{c.name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -413,6 +479,44 @@ const Menu = () => {
                   className="flex-1 px-4 py-3 rounded-2xl bg-[#6C4DFF] text-white font-bold hover:bg-indigo-700 shadow-lg shadow-[#6C4DFF]/20 transition-all text-sm disabled:opacity-50"
                 >
                   {editingItem ? 'Save Changes' : 'Add Item'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Category Modal */}
+      {isCategoryModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-3xl w-full max-w-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 border border-slate-100">
+            <div className="px-6 py-4 border-b border-slate-150 flex justify-between items-center bg-slate-50/50">
+              <h2 className="text-lg font-extrabold text-slate-900">Add Category</h2>
+              <button onClick={() => setIsCategoryModalOpen(false)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 text-slate-400 hover:text-slate-650 transition-colors">
+                <X size={18} />
+              </button>
+            </div>
+            <form onSubmit={handleSaveStandaloneCategory} className="p-6 space-y-5">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 tracking-wider uppercase mb-1.5">Category Name</label>
+                <input
+                  type="text" required
+                  value={standaloneCategoryName} onChange={(e) => setStandaloneCategoryName(e.target.value)}
+                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-[#6C4DFF]/20 focus:border-[#6C4DFF] transition-all outline-none text-sm bg-slate-50/30"
+                  placeholder="e.g. Beverages"
+                  autoFocus
+                />
+              </div>
+              <div className="pt-3 flex gap-3 border-t border-slate-100">
+                <button type="button" onClick={() => setIsCategoryModalOpen(false)} className="flex-1 px-4 py-3 rounded-2xl border border-slate-250 text-slate-700 font-bold hover:bg-slate-50 transition-colors text-sm">
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={!standaloneCategoryName.trim()}
+                  className="flex-1 px-4 py-3 rounded-2xl bg-[#6C4DFF] text-white font-bold hover:bg-indigo-700 shadow-lg shadow-[#6C4DFF]/20 transition-all text-sm disabled:opacity-50"
+                >
+                  Save
                 </button>
               </div>
             </form>
