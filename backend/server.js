@@ -19,33 +19,25 @@ const cors = require('cors');
 const path = require('path');
 const http = require('http');
 const { Server } = require('socket.io');
+const { initRedisSubscriber } = require('./utils/redisClient');
 
 const app = express();
 const server = http.createServer(app);
+const PORT = process.env.PORT || 5000;
+
+// Socket.io initialization
 const io = new Server(server, {
   cors: {
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  },
+    origin: '*', // Allow all origins for development
+    methods: ['GET', 'POST']
+  }
 });
 
-// Attach io to the app so controllers can use it
+// Store io instance in app so controllers can access it if needed (though Redis handles pub/sub)
 app.set('io', io);
 
-// Handle socket connections
-io.on('connection', (socket) => {
-  console.log('A user connected via Socket.IO');
-
-  socket.on('joinRestaurantRoom', (restaurantId) => {
-    socket.join(restaurantId);
-    console.log(`Socket joined room: ${restaurantId}`);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
-});
-const PORT = process.env.PORT || 5000;
+// Initialize Redis Subscriber
+initRedisSubscriber(io);
 
 // Middleware
 app.use(cors());
