@@ -109,6 +109,9 @@ const getStats = async (req, res) => {
       r.status === 'expired' || (r.subscriptionExpiry && new Date(r.subscriptionExpiry) < now)
     ).length;
 
+    // Suspended restaurants count
+    const suspendedCount = allRestaurants.filter(r => r.status === 'suspended').length;
+
     // Monthly revenue computation (payments completed in the current month)
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
@@ -206,6 +209,7 @@ const getStats = async (req, res) => {
       metrics: {
         totalRestaurants: totalRest.length,
         activeRestaurants: activeRest.length,
+        suspendedRestaurants: suspendedCount,
         expiredSubscriptions: expiredCount,
         monthlyRevenue: monthlyRev,
         totalOrders: totalOrd.length,
