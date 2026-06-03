@@ -121,6 +121,34 @@
       "_id": "50d094074863f5b82b5fd3ad",
       "id": "50d094074863f5b82b5fd3ad",
       "updatedAt": "2026-05-28T05:08:09.539Z"
+    },
+    {
+      "restaurantId": "06ea5dd1b8b52637bbb939ac",
+      "name": "White Roti",
+      "price": 24,
+      "category": "",
+      "image": "http://localhost:5000/uploads/1780503982385-goa2.jpeg",
+      "isAvailable": true,
+      "createdAt": 1780503985787,
+      "_id": "b4dc52ce27b7a82e62677b6e",
+      "id": "b4dc52ce27b7a82e62677b6e",
+      "updatedAt": "2026-06-03T18:00:00.761Z",
+      "stock": -2,
+      "lowStockThreshold": 10
+    },
+    {
+      "restaurantId": "06ea5dd1b8b52637bbb939ac",
+      "name": "Butter Roti",
+      "price": 25,
+      "category": "Roti",
+      "image": "http://localhost:5000/uploads/1780504643151-wallpaper.jpg",
+      "isAvailable": true,
+      "stock": -6,
+      "lowStockThreshold": 10,
+      "createdAt": 1780504645060,
+      "_id": "9a894077a83a2252cb1eee6b",
+      "id": "9a894077a83a2252cb1eee6b",
+      "updatedAt": "2026-06-03T18:00:07.056Z"
     }
   ],
   "Restaurant": [
@@ -218,11 +246,11 @@
       "status": "active",
       "url": "http://localhost:5173/scan/natkhat-t1",
       "totalScans": 42,
-      "ordersPlaced": 12,
+      "ordersPlaced": 13,
       "_id": "d21af1243c285cd60d856de9",
       "id": "d21af1243c285cd60d856de9",
       "createdAt": "2026-06-03T10:40:28.861Z",
-      "updatedAt": "2026-06-03T10:40:28.861Z"
+      "updatedAt": "2026-06-03T17:23:44.747Z"
     },
     {
       "restaurant": "e09cb061f119eb2a51df8e99",
@@ -236,6 +264,20 @@
       "id": "8bbe9cd05b7c7e2c2f900f76",
       "createdAt": "2026-06-03T10:40:28.862Z",
       "updatedAt": "2026-06-03T10:40:28.862Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "tableName": "table 12",
+      "section": "Main",
+      "status": "active",
+      "url": "http://localhost:5173/scan/e2402ef41e55a32db995ee30",
+      "totalScans": 2,
+      "ordersPlaced": 5,
+      "_id": "e2402ef41e55a32db995ee30",
+      "id": "e2402ef41e55a32db995ee30",
+      "createdAt": "2026-06-03T16:23:01.852Z",
+      "updatedAt": "2026-06-03T18:00:07.059Z",
+      "lastScanned": "2026-06-03T16:23:11.598Z"
     }
   ],
   "Order": [
@@ -258,12 +300,12 @@
       ],
       "totalAmount": 350,
       "paymentStatus": "Pending",
-      "status": "Preparing",
+      "status": "Completed",
       "eta": "10 mins",
       "_id": "676c96d46d7316c6f9468444",
       "id": "676c96d46d7316c6f9468444",
       "createdAt": "2026-06-03T10:40:28.863Z",
-      "updatedAt": "2026-06-03T10:40:28.863Z"
+      "updatedAt": "2026-06-03T17:41:19.947Z"
     },
     {
       "restaurant": "e09cb061f119eb2a51df8e99",
@@ -290,6 +332,142 @@
       "id": "98940dcb4799e1ba29b9a9db",
       "createdAt": "2026-06-03T10:40:28.864Z",
       "updatedAt": "2026-06-03T10:40:28.864Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1002",
+      "tableName": "Table 1",
+      "customerName": "Guest 838",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 25,
+      "paymentStatus": "Pending",
+      "status": "Completed",
+      "eta": "15 min",
+      "_id": "2a99edae6964658ed38c9e9b",
+      "id": "2a99edae6964658ed38c9e9b",
+      "createdAt": "2026-06-03T17:23:44.731Z",
+      "updatedAt": "2026-06-03T17:41:19.938Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1003",
+      "tableName": "table 12",
+      "customerName": "Guest 458",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        },
+        {
+          "name": "White Roti",
+          "price": 24,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 49,
+      "paymentStatus": "Pending",
+      "status": "Completed",
+      "eta": "15 min",
+      "_id": "a85100b810c87d8a7504052c",
+      "id": "a85100b810c87d8a7504052c",
+      "createdAt": "2026-06-03T17:25:09.201Z",
+      "updatedAt": "2026-06-03T17:38:24.144Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1004",
+      "tableName": "table 12",
+      "customerName": "Guest 113",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 25,
+      "paymentStatus": "Pending",
+      "status": "Completed",
+      "eta": "15 min",
+      "_id": "d5dabe83e6746e9ec4ef9d69",
+      "id": "d5dabe83e6746e9ec4ef9d69",
+      "createdAt": "2026-06-03T17:44:18.309Z",
+      "updatedAt": "2026-06-03T17:45:08.624Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1005",
+      "tableName": "table 12",
+      "customerName": "Guest 198",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 25,
+      "paymentStatus": "Pending",
+      "status": "Completed",
+      "eta": "15 min",
+      "_id": "4bdbdf992a25fa755e6fca9b",
+      "id": "4bdbdf992a25fa755e6fca9b",
+      "createdAt": "2026-06-03T17:44:27.401Z",
+      "updatedAt": "2026-06-03T17:45:08.606Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1006",
+      "tableName": "table 12",
+      "customerName": "Guest 164",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        },
+        {
+          "name": "White Roti",
+          "price": 24,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 49,
+      "paymentStatus": "Pending",
+      "status": "New Order",
+      "eta": "15 min",
+      "_id": "080c09095722e5a9b950cf2f",
+      "id": "080c09095722e5a9b950cf2f",
+      "createdAt": "2026-06-03T18:00:00.741Z",
+      "updatedAt": "2026-06-03T18:00:00.742Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1007",
+      "tableName": "table 12",
+      "customerName": "Guest 438",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 25,
+      "paymentStatus": "Pending",
+      "status": "New Order",
+      "eta": "15 min",
+      "_id": "ca5a3fa3903d4b66394d570c",
+      "id": "ca5a3fa3903d4b66394d570c",
+      "createdAt": "2026-06-03T18:00:07.054Z",
+      "updatedAt": "2026-06-03T18:00:07.054Z"
     }
   ],
   "SuperAdmin": [
@@ -708,6 +886,16 @@
       "id": "e8ae906e50f11e5ad829daa0",
       "createdAt": "2026-06-03T10:45:23.656Z",
       "updatedAt": "2026-06-03T10:45:23.656Z"
+    }
+  ],
+  "Category": [
+    {
+      "restaurantId": "06ea5dd1b8b52637bbb939ac",
+      "name": "Roti",
+      "createdAt": 1780504501734,
+      "_id": "acf50dcee060bfd12b041af4",
+      "id": "acf50dcee060bfd12b041af4",
+      "updatedAt": "2026-06-03T16:35:01.741Z"
     }
   ]
 }

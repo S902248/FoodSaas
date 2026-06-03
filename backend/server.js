@@ -17,8 +17,34 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const http = require('http');
+const { Server } = require('socket.io');
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  },
+});
+
+// Attach io to the app so controllers can use it
+app.set('io', io);
+
+// Handle socket connections
+io.on('connection', (socket) => {
+  console.log('A user connected via Socket.IO');
+
+  socket.on('joinRestaurantRoom', (restaurantId) => {
+    socket.join(restaurantId);
+    console.log(`Socket joined room: ${restaurantId}`);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
 const PORT = process.env.PORT || 5000;
 
 // Middleware
@@ -34,6 +60,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/menu', require('./routes/foodRoutes'));
+app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
 app.use('/api/qrcodes', require('./routes/qrRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
@@ -49,6 +76,6 @@ app.get('/api/status', (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

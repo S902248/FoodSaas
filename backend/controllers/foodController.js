@@ -1,4 +1,5 @@
 const Food = require('../models/Food');
+const Notification = require('../models/Notification');
 
 // @desc    Get all menu items for the logged-in restaurant
 // @route   GET /api/menu
@@ -57,6 +58,21 @@ const updateFood = async (req, res) => {
       { $set: req.body },
       { new: true }
     );
+
+    // Check if we need to resolve low_stock alerts
+    if (food.stock > food.lowStockThreshold) {
+      const updatedNotifications = await Notification.updateMany(
+        { recipient: req.restaurant.id, productName: food.name, type: 'low_stock', isRead: false },
+        { $set: { isRead: true } }
+      );
+      
+      if (updatedNotifications.modifiedCount > 0) {
+        const io = req.app.get('io');
+        if (io) {
+          io.to(req.restaurant.id.toString()).emit('alert_resolved', { productName: food.name });
+        }
+      }
+    }
 
     res.json(food);
   } catch (err) {

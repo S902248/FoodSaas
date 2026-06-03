@@ -11,8 +11,11 @@ const notificationSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['global', 'expiry', 'system'],
+    enum: ['global', 'expiry', 'system', 'low_stock'],
     default: 'global',
+  },
+  productName: {
+    type: String,
   },
   recipient: {
     type: mongoose.Schema.Types.ObjectId,

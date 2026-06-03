@@ -28,6 +28,14 @@ const foodSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  stock: {
+    type: Number,
+    default: 0,
+  },
+  lowStockThreshold: {
+    type: Number,
+    default: 10,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
