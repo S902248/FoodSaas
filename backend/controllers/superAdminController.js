@@ -268,7 +268,7 @@ const getRestaurants = async (req, res) => {
 // @access  Private (Super Admin)
 const createRestaurant = async (req, res) => {
   try {
-    const { restaurantName, email, password, ownerName, phone, planId, expiryDays } = req.body;
+    const { restaurantName, email, password, ownerName, phone, planId, expiryDays, tableLimit } = req.body;
 
     let existing = await Restaurant.findOne({ email });
     if (existing) {
@@ -287,6 +287,7 @@ const createRestaurant = async (req, res) => {
       password: hashedPassword,
       ownerName,
       phone,
+      tableLimit: tableLimit ? parseInt(tableLimit) : 50,
       plan: planId || null,
       status: 'active',
       subscriptionExpiry: expiry

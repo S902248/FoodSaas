@@ -45,6 +45,10 @@ const restaurantSchema = new mongoose.Schema({
   subscriptionExpiry: {
     type: Date,
   },
+  tableLimit: {
+    type: Number,
+    default: 50,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

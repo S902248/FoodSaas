@@ -15,6 +15,7 @@ import {
   HelpCircle, Activity, FileSpreadsheet, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Menu, MessageSquare, X, AlertTriangle
 } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
+import { io } from 'socket.io-client';
 
 const SuperAdminDashboard = () => {
   const { admin, adminToken, adminLogout } = useContext(SuperAdminAuthContext);
@@ -59,10 +60,11 @@ const SuperAdminDashboard = () => {
   };
 
   // Form States
-  const [restaurantForm, setRestaurantForm] = useState({ restaurantName: '', ownerName: '', email: '', password: '', phone: '', planId: '', expiryDays: 30 });
+  const [restaurantForm, setRestaurantForm] = useState({ restaurantName: '', ownerName: '', email: '', password: '', phone: '', planId: '', expiryDays: 30, tableLimit: 50 });
   const [planForm, setPlanForm] = useState({ name: '', price: 0, billingPeriod: 'Monthly', features: '', maxTables: 10, maxBranches: 1, qrLimits: 10, staffLimits: 5 });
   const [paymentForm, setPaymentForm] = useState({ restaurantId: '', amount: '', method: 'UPI', date: '' });
   const [settingsForm, setSettingsForm] = useState({ platformName: '', logoUrl: '', smtpHost: '', smtpPort: '', smtpUser: '', currency: 'INR', taxPercentage: '18' });
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [couponForm, setCouponForm] = useState({ code: '', discount: '', maxUses: '', expiryDate: '' });
   const [coupons, setCoupons] = useState([
     { id: '1', code: 'WELCOME50', discount: 50, maxUses: 100, used: 25, expiryDate: '2026-12-31', status: 'Active' },
@@ -110,6 +112,20 @@ const SuperAdminDashboard = () => {
     }
   }, [adminToken]);
 
+  // Establish WebSocket Connection for Real-Time Notifications
+  useEffect(() => {
+    const socket = io('http://localhost:5000');
+
+    socket.on('new_notification', (data) => {
+      showToast(data.message, 'success');
+      setUnreadNotifications(prev => prev + 1);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   const handleLogout = () => {
     adminLogout();
     navigate('/superadmin/login');
@@ -121,7 +137,8 @@ const SuperAdminDashboard = () => {
     try {
       await axios.post('http://localhost:5000/api/superadmin/restaurants', restaurantForm, apiConfig);
       setActiveModal(null);
-      setRestaurantForm({ restaurantName: '', ownerName: '', email: '', password: '', phone: '', planId: '', expiryDays: 30 });
+      showToast('Restaurant account registered successfully', 'success');
+      setRestaurantForm({ restaurantName: '', ownerName: '', email: '', password: '', phone: '', planId: '', expiryDays: 30, tableLimit: 50 });
       fetchData();
     } catch (err) {
       showToast(err.response?.data?.message || 'Error creating restaurant', "error");
@@ -592,11 +609,17 @@ const SuperAdminDashboard = () => {
 
 
             <div className="relative">
-              <button className={`w-10 h-10 border rounded-xl flex items-center justify-center transition-colors shadow-sm cursor-pointer ${
+              <button 
+                onClick={() => setUnreadNotifications(0)}
+                className={`p-2.5 rounded-xl border relative transition-all ${
                 darkMode ? 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
               }`}>
                 <Bell size={20} />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-indigo-500 rounded-full ring-2 ring-white"></span>
+                {unreadNotifications > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center px-1 shadow-sm ring-2 ring-white">
+                    {unreadNotifications > 99 ? '99+' : unreadNotifications}
+                  </span>
+                )}
               </button>
             </div>
 
@@ -720,67 +743,7 @@ const SuperAdminDashboard = () => {
                     </div>
                   </div>
 
-                  {/* Logs & Activity Feeds */}
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                    {/* Recent Restaurants */}
-                    <div className={`p-5 rounded-2xl border lg:col-span-1 flex flex-col h-[400px] ${bgCard}`}>
-                      <h3 className={`text-sm font-black mb-4 tracking-tight ${textPrimary}`}>New Registrations</h3>
-                      <div className="flex-1 overflow-y-auto space-y-3 pr-1">
-                        {stats.recentRestaurants.map((res, i) => (
-                          <div key={i} className={`p-3 rounded-xl border flex items-center justify-between ${
-                            darkMode ? 'bg-slate-900/40 border-slate-800/50' : 'bg-slate-50 border-slate-100'
-                          }`}>
-                            <div className="overflow-hidden">
-                              <p className={`font-bold text-xs truncate ${textPrimary}`}>{res.restaurantName}</p>
-                              <p className="text-[10px] text-slate-400 font-semibold">{res.ownerName}</p>
-                            </div>
-                            <span className="text-[9px] font-black uppercase bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full border border-indigo-500/20">
-                              {res.planName}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
 
-                    {/* Recent Payments */}
-                    <div className={`p-5 rounded-2xl border lg:col-span-1 flex flex-col h-[400px] ${bgCard}`}>
-                      <h3 className={`text-sm font-black mb-4 tracking-tight ${textPrimary}`}>Recent Revenue Feed</h3>
-                      <div className="flex-1 overflow-y-auto space-y-3 pr-1">
-                        {stats.recentPayments.map((pay, i) => (
-                          <div key={i} className={`p-3 rounded-xl border flex items-center justify-between ${
-                            darkMode ? 'bg-slate-900/40 border-slate-800/50' : 'bg-slate-50 border-slate-100'
-                          }`}>
-                            <div className="overflow-hidden">
-                              <p className={`font-bold text-xs truncate ${textPrimary}`}>{pay.restaurantName}</p>
-                              <p className="text-[10px] text-slate-400 font-bold">{new Date(pay.date).toLocaleDateString()} via {pay.method}</p>
-                            </div>
-                            <span className="text-xs font-black text-emerald-400">
-                              +{systemSettings?.currencySymbol || '₹'}{pay.amount}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Audit Logs */}
-                    <div className={`p-5 rounded-2xl border lg:col-span-1 flex flex-col h-[400px] ${bgCard}`}>
-                      <h3 className={`text-sm font-black mb-4 tracking-tight ${textPrimary}`}>System Timeline</h3>
-                      <div className="flex-1 overflow-y-auto space-y-3.5 pr-1">
-                        {stats.timeline.map((log, i) => (
-                          <div key={i} className="flex gap-3">
-                            <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0"></div>
-                            <div>
-                              <p className={`text-xs font-bold ${textPrimary}`}>{log.action}</p>
-                              <p className="text-[10px] text-slate-400 mt-0.5 font-medium">{log.details}</p>
-                              <p className="text-[8px] text-slate-500 font-extrabold uppercase tracking-widest mt-1">
-                                {new Date(log.time).toLocaleTimeString()}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
                 </div>
               )}
 
@@ -837,7 +800,7 @@ const SuperAdminDashboard = () => {
                       {/* Add Restaurant */}
                       <button
                         onClick={() => {
-                          setRestaurantForm({ restaurantName: '', ownerName: '', email: '', password: '', phone: '', planId: plans[0]?._id || '', expiryDays: 30 });
+                          setRestaurantForm({ restaurantName: '', ownerName: '', email: '', password: '', phone: '', planId: plans[0]?._id || '', expiryDays: 30, tableLimit: 50 });
                           setActiveModal('add_restaurant');
                         }}
                         className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-md shadow-indigo-600/20"
@@ -2067,6 +2030,18 @@ const SuperAdminDashboard = () => {
                         value={restaurantForm.expiryDays}
                         onChange={(e) => setRestaurantForm(prev => ({ ...prev, expiryDays: e.target.value }))}
                         placeholder="30"
+                        className={`w-full px-4 py-2 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 ${bgInput}`}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">Table Limit</label>
+                      <input
+                        type="number"
+                        required
+                        value={restaurantForm.tableLimit}
+                        onChange={(e) => setRestaurantForm(prev => ({ ...prev, tableLimit: e.target.value }))}
+                        placeholder="50"
                         className={`w-full px-4 py-2 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 ${bgInput}`}
                       />
                     </div>

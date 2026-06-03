@@ -171,22 +171,45 @@ const registerRestaurant = async (req, res) => {
 
     await restaurant.save();
 
-    // Generate JWT
+    // -- REAL-TIME NOTIFICATION HOOK --
+    try {
+      const Notification = require('../models/Notification');
+      const { publishNotification } = require('../utils/redisClient');
+      
+      const notifMsg = `New restaurant registered: ${restaurantName} (${email})`;
+      const newNotif = new Notification({
+        title: 'New Registration',
+        message: notifMsg,
+        type: 'system',
+        recipient: restaurant._id
+      });
+      await newNotif.save();
+
+      await publishNotification({
+        title: 'New Registration',
+        message: notifMsg,
+        time: new Date(),
+        type: 'system'
+      });
+    } catch (notifErr) {
+      console.error('Failed to send real-time notification on register:', notifErr);
+    }
+    // ---------------------------------
+
+    // Return JWT
     const payload = {
       restaurant: {
         id: restaurant.id,
       },
     };
 
-    const jwtSecret = process.env.JWT_SECRET || 'fallback_secret_key_12345';
-
     jwt.sign(
       payload,
-      jwtSecret,
-      { expiresIn: '5 days' },
+      process.env.JWT_SECRET || 'secret123',
+      { expiresIn: '30d' }, // Longer expiration for convenience
       (err, token) => {
         if (err) throw err;
-        res.status(201).json({ token, restaurantId: restaurant.id, restaurantName: restaurant.restaurantName });
+        res.status(201).json({ token, restaurant: { id: restaurant.id, restaurantName: restaurant.restaurantName, email: restaurant.email, phone: restaurant.phone } });
       }
     );
   } catch (err) {

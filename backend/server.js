@@ -17,9 +17,27 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const http = require('http');
+const { Server } = require('socket.io');
+const { initRedisSubscriber } = require('./utils/redisClient');
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
+
+// Socket.io initialization
+const io = new Server(server, {
+  cors: {
+    origin: '*', // Allow all origins for development
+    methods: ['GET', 'POST']
+  }
+});
+
+// Store io instance in app so controllers can access it if needed (though Redis handles pub/sub)
+app.set('io', io);
+
+// Initialize Redis Subscriber
+initRedisSubscriber(io);
 
 // Middleware
 app.use(cors());
@@ -49,6 +67,6 @@ app.get('/api/status', (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
