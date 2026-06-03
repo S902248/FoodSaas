@@ -886,6 +886,24 @@
       "id": "e8ae906e50f11e5ad829daa0",
       "createdAt": "2026-06-03T10:45:23.656Z",
       "updatedAt": "2026-06-03T10:45:23.656Z"
+    },
+    {
+      "action": "Login",
+      "details": "Super Admin admin@foodaas.com logged in successfully",
+      "performedBy": "Super Admin",
+      "_id": "af37bea77f420dc25cea65ce",
+      "id": "af37bea77f420dc25cea65ce",
+      "createdAt": "2026-06-03T16:13:32.829Z",
+      "updatedAt": "2026-06-03T16:13:32.829Z"
+    },
+    {
+      "action": "Login",
+      "details": "Super Admin admin@foodaas.com logged in successfully",
+      "performedBy": "Super Admin",
+      "_id": "670e111d484e6c44a98dfb5e",
+      "id": "670e111d484e6c44a98dfb5e",
+      "createdAt": "2026-06-03T16:18:32.246Z",
+      "updatedAt": "2026-06-03T16:18:32.246Z"
     }
   ],
   "Category": [

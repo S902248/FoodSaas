@@ -12,7 +12,7 @@ import {
   ShoppingBag, Users, LifeBuoy, Bell, Settings, LogOut, Search,
   Plus, Edit, Trash2, Mail, Phone, ShieldAlert, DollarSign,
   CheckCircle, Calendar, Moon, Sun, Send, Percent, Download,
-  HelpCircle, Activity, FileSpreadsheet, ChevronLeft, ChevronRight, Menu, MessageSquare
+  HelpCircle, Activity, FileSpreadsheet, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Menu, MessageSquare, X, AlertTriangle
 } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
 
@@ -23,7 +23,7 @@ const SuperAdminDashboard = () => {
   // Navigation and layout states
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
+  const darkMode = false;
 
   // API Data States
   const [stats, setStats] = useState(null);
@@ -43,6 +43,20 @@ const SuperAdminDashboard = () => {
   // Modals States
   const [activeModal, setActiveModal] = useState(null); // 'add_restaurant', 'edit_restaurant', 'extend_sub', 'plan_form', 'payment_form', 'ticket_chat'
   const [selectedItem, setSelectedItem] = useState(null);
+
+  // Table & Interaction States
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [selectedRestaurantIds, setSelectedRestaurantIds] = useState([]);
+  const [drawerRestaurant, setDrawerRestaurant] = useState(null);
+  const [confirmDialog, setConfirmDialog] = useState(null); // { message, onConfirm, onCancel, intent }
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   // Form States
   const [restaurantForm, setRestaurantForm] = useState({ restaurantName: '', ownerName: '', email: '', password: '', phone: '', planId: '', expiryDays: 30 });
@@ -110,7 +124,7 @@ const SuperAdminDashboard = () => {
       setRestaurantForm({ restaurantName: '', ownerName: '', email: '', password: '', phone: '', planId: '', expiryDays: 30 });
       fetchData();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error creating restaurant');
+      showToast(err.response?.data?.message || 'Error creating restaurant', "error");
     }
   };
 
@@ -122,29 +136,84 @@ const SuperAdminDashboard = () => {
       setSelectedItem(null);
       fetchData();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error updating restaurant');
+      showToast(err.response?.data?.message || 'Error updating restaurant', "error");
     }
   };
 
-  const handleDeleteRestaurant = async (id) => {
-    if (window.confirm('Are you sure you want to delete this restaurant and all associated branches, menus, and configurations?')) {
-      try {
-        await axios.delete(`http://localhost:5000/api/superadmin/restaurants/${id}`, apiConfig);
-        fetchData();
-      } catch (err) {
-        alert(err.response?.data?.message || 'Error deleting restaurant');
-      }
-    }
+  const handleDeleteRestaurant = (id) => {
+    setConfirmDialog({
+      message: 'Are you sure you want to delete this restaurant and all associated branches, menus, and configurations?',
+      intent: 'danger',
+      onConfirm: async () => {
+        try {
+          await axios.delete(`http://localhost:5000/api/superadmin/restaurants/${id}`, apiConfig);
+          setConfirmDialog(null);
+          setSelectedRestaurantIds(prev => prev.filter(rId => rId !== id));
+          fetchData();
+        } catch (err) {
+          showToast(err.response?.data?.message || 'Error deleting restaurant', "error");
+        }
+      },
+      onCancel: () => setConfirmDialog(null)
+    });
   };
 
-  const handleStatusChange = async (id, currentStatus) => {
+  const handleStatusChange = (id, currentStatus) => {
     const nextStatus = currentStatus === 'suspended' ? 'active' : 'suspended';
-    try {
-      await axios.put(`http://localhost:5000/api/superadmin/restaurants/${id}/status`, { status: nextStatus }, apiConfig);
-      fetchData();
-    } catch (err) {
-      alert(err.response?.data?.message || 'Error changing status');
-    }
+    setConfirmDialog({
+      message: `Are you sure you want to change the status to ${nextStatus}?`,
+      intent: nextStatus === 'suspended' ? 'warning' : 'success',
+      onConfirm: async () => {
+        try {
+          await axios.put(`http://localhost:5000/api/superadmin/restaurants/${id}/status`, { status: nextStatus }, apiConfig);
+          setConfirmDialog(null);
+          fetchData();
+        } catch (err) {
+          showToast(err.response?.data?.message || 'Error changing status', "error");
+        }
+      },
+      onCancel: () => setConfirmDialog(null)
+    });
+  };
+
+  const handleBulkDelete = () => {
+    setConfirmDialog({
+      message: `Are you sure you want to delete ${selectedRestaurantIds.length} restaurants? This action is irreversible.`,
+      intent: 'danger',
+      onConfirm: async () => {
+        try {
+          for (const id of selectedRestaurantIds) {
+            await axios.delete(`http://localhost:5000/api/superadmin/restaurants/${id}`, apiConfig);
+          }
+          setSelectedRestaurantIds([]);
+          setConfirmDialog(null);
+          fetchData();
+        } catch (err) {
+          showToast('Error during bulk delete', "success");
+        }
+      },
+      onCancel: () => setConfirmDialog(null)
+    });
+  };
+
+  const handleBulkStatusChange = (status) => {
+    setConfirmDialog({
+      message: `Are you sure you want to ${status} ${selectedRestaurantIds.length} restaurants?`,
+      intent: status === 'suspended' ? 'warning' : 'success',
+      onConfirm: async () => {
+        try {
+          for (const id of selectedRestaurantIds) {
+            await axios.put(`http://localhost:5000/api/superadmin/restaurants/${id}/status`, { status }, apiConfig);
+          }
+          setSelectedRestaurantIds([]);
+          setConfirmDialog(null);
+          fetchData();
+        } catch (err) {
+          showToast('Error during bulk status update', "success");
+        }
+      },
+      onCancel: () => setConfirmDialog(null)
+    });
   };
 
   const handleExtendExpiry = async (e) => {
@@ -155,7 +224,7 @@ const SuperAdminDashboard = () => {
       setSelectedItem(null);
       fetchData();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error extending subscription');
+      showToast(err.response?.data?.message || 'Error extending subscription', "error");
     }
   };
 
@@ -172,7 +241,7 @@ const SuperAdminDashboard = () => {
       setPlanForm({ name: '', price: 0, billingPeriod: 'Monthly', features: '', maxTables: 10, maxBranches: 1, qrLimits: 10, staffLimits: 5 });
       fetchData();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error processing plan');
+      showToast(err.response?.data?.message || 'Error processing plan', "error");
     }
   };
 
@@ -182,7 +251,7 @@ const SuperAdminDashboard = () => {
         await axios.delete(`http://localhost:5000/api/superadmin/plans/${id}`, apiConfig);
         fetchData();
       } catch (err) {
-        alert(err.response?.data?.message || 'Error deleting plan');
+        showToast(err.response?.data?.message || 'Error deleting plan', "error");
       }
     }
   };
@@ -196,7 +265,7 @@ const SuperAdminDashboard = () => {
       setPaymentForm({ restaurantId: '', amount: '', method: 'UPI', date: '' });
       fetchData();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error logging payment');
+      showToast(err.response?.data?.message || 'Error logging payment', "error");
     }
   };
 
@@ -213,7 +282,7 @@ const SuperAdminDashboard = () => {
       const updatedTicket = res.data.find(t => t._id === selectedItem._id);
       setSelectedItem(updatedTicket);
     } catch (err) {
-      alert(err.response?.data?.message || 'Error replying to ticket');
+      showToast(err.response?.data?.message || 'Error replying to ticket', "error");
     }
   };
 
@@ -225,7 +294,7 @@ const SuperAdminDashboard = () => {
         setSelectedItem(prev => ({ ...prev, status }));
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Error changing ticket status');
+      showToast(err.response?.data?.message || 'Error changing ticket status', "error");
     }
   };
 
@@ -236,9 +305,9 @@ const SuperAdminDashboard = () => {
       await axios.post('http://localhost:5000/api/superadmin/notifications', announcementForm, apiConfig);
       setAnnouncementForm({ title: '', message: '' });
       fetchData();
-      alert('Global Announcement sent successfully!');
+      showToast('Global Announcement sent successfully!', "success");
     } catch (err) {
-      alert(err.response?.data?.message || 'Error dispatching announcement');
+      showToast(err.response?.data?.message || 'Error dispatching announcement', "error");
     }
   };
 
@@ -248,9 +317,9 @@ const SuperAdminDashboard = () => {
     try {
       await axios.post('http://localhost:5000/api/superadmin/settings', settingsForm, apiConfig);
       fetchData();
-      alert('Settings saved successfully!');
+      showToast('Settings saved successfully!', "success");
     } catch (err) {
-      alert(err.response?.data?.message || 'Error saving settings');
+      showToast(err.response?.data?.message || 'Error saving settings', "error");
     }
   };
 
@@ -288,16 +357,89 @@ const SuperAdminDashboard = () => {
   const borderPrimary = darkMode ? 'border-slate-800' : 'border-slate-100';
   const bgInput = darkMode ? 'bg-slate-950/80 border-slate-800 text-slate-100' : 'bg-slate-50 border-slate-200 text-slate-800';
 
+  // Data Transformations
+  const processedRestaurants = React.useMemo(() => {
+    let filtered = (restaurants || []).filter(r => {
+      const searchLower = (restSearch || '').toLowerCase();
+      const matchesSearch = 
+        (r?.restaurantName || '').toLowerCase().includes(searchLower) ||
+        (r?.ownerName || '').toLowerCase().includes(searchLower) ||
+        (r?.email || '').toLowerCase().includes(searchLower);
+      const matchesStatus = restStatusFilter === 'all' || r?.status === restStatusFilter;
+      const matchesPlan = restPlanFilter === 'all' || r?.plan === restPlanFilter;
+      return matchesSearch && matchesStatus && matchesPlan;
+    });
+
+    if (sortConfig.key) {
+      filtered.sort((a, b) => {
+        if (sortConfig.key === 'expiry') {
+          const aDate = a.subscriptionExpiry ? new Date(a.subscriptionExpiry).getTime() : 0;
+          const bDate = b.subscriptionExpiry ? new Date(b.subscriptionExpiry).getTime() : 0;
+          return sortConfig.direction === 'asc' ? aDate - bDate : bDate - aDate;
+        }
+        if (sortConfig.key === 'plan') {
+          const aPlan = a.plan || '';
+          const bPlan = b.plan || '';
+          return sortConfig.direction === 'asc' ? aPlan.localeCompare(bPlan) : bPlan.localeCompare(aPlan);
+        }
+        if (sortConfig.key === 'status') {
+          const aStat = a.status || '';
+          const bStat = b.status || '';
+          return sortConfig.direction === 'asc' ? aStat.localeCompare(bStat) : bStat.localeCompare(aStat);
+        }
+        return 0;
+      });
+    }
+
+    return filtered;
+  }, [restaurants, restSearch, restStatusFilter, restPlanFilter, sortConfig]);
+
+  const totalPages = Math.ceil(processedRestaurants.length / itemsPerPage);
+  const currentRestaurants = processedRestaurants.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
   if (loading || !stats) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${darkMode ? 'bg-[#0B0F19]' : 'bg-[#F8FAFC]'}`}>
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className={`w-12 h-12 animate-spin ${darkMode ? 'text-indigo-400' : 'text-indigo-600'}`} />
-          <p className={darkMode ? 'text-slate-400 font-medium' : 'text-slate-500 font-medium'}>Loading Console...</p>
+      <div className={`h-screen flex overflow-hidden font-sans ${darkMode ? 'bg-[#0B0F19]' : 'bg-[#F8FAFC]'}`}>
+        <aside className={`w-64 flex flex-col shrink-0 border-r ${darkMode ? 'bg-slate-950 border-slate-900' : 'bg-white border-slate-200'}`}>
+          <div className="h-20 border-b border-transparent flex items-center px-6">
+            <div className="w-8 h-8 rounded-xl bg-slate-200 animate-pulse" />
+            <div className="w-24 h-6 ml-3 rounded bg-slate-200 animate-pulse" />
+          </div>
+          <div className="p-4 space-y-4">
+            {[1,2,3,4,5].map(i => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="w-5 h-5 rounded bg-slate-200 animate-pulse" />
+                <div className="w-32 h-4 rounded bg-slate-200 animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </aside>
+        <div className="flex-1 p-8 space-y-8 overflow-hidden">
+          <div className="w-48 h-8 bg-slate-200 rounded animate-pulse" />
+          <div className="grid grid-cols-4 gap-6">
+            {[1,2,3,4].map(i => (
+              <div key={i} className={`p-6 rounded-3xl border ${darkMode ? 'border-slate-800 bg-slate-900' : 'border-slate-100 bg-white'}`}>
+                <div className="w-10 h-10 rounded-full bg-slate-200 animate-pulse mb-4" />
+                <div className="w-16 h-8 rounded bg-slate-200 animate-pulse mb-2" />
+                <div className="w-32 h-3 rounded bg-slate-200 animate-pulse" />
+              </div>
+            ))}
+          </div>
+          <div className={`h-64 rounded-3xl border ${darkMode ? 'border-slate-800 bg-slate-900' : 'border-slate-100 bg-white'} animate-pulse`} />
         </div>
       </div>
     );
   }
+
+
 
   // Grouped Navigation Items
   const menuGroups = [
@@ -330,7 +472,10 @@ const SuperAdminDashboard = () => {
       icon: ShoppingBag,
       items: [
         { id: 'qr_codes', label: 'QR Management' },
-        { id: 'orders', label: 'Orders Monitoring' }
+        { id: 'orders', label: 'Orders Monitoring' },
+        { id: 'activity_log', label: 'Activity Log' },
+        { id: 'broadcast_tool', label: 'Broadcast / Email Tool' },
+        { id: 'onboarding', label: 'Onboarding Tracker' }
       ]
     },
     {
@@ -346,48 +491,106 @@ const SuperAdminDashboard = () => {
   ];
 
   return (
-    <div className={`min-h-screen flex flex-col overflow-hidden font-sans transition-colors duration-200 ${bgMain}`}>
-      {/* Top Navbar & Header */}
-      <header className={`flex flex-col z-20 transition-all shadow-sm ${
-        darkMode ? 'bg-slate-950 border-b border-slate-900 backdrop-blur-md' : 'bg-white border-b border-slate-200'
+    <div className={`h-screen flex overflow-hidden font-sans transition-colors duration-200 ${bgMain}`}>
+      {/* Sidebar */}
+      <aside className={`w-64 flex flex-col shrink-0 z-20 transition-all ${
+        darkMode ? 'bg-slate-950 border-r border-slate-900' : 'bg-white border-r border-slate-200'
       }`}>
-        <div className="h-20 flex items-center justify-between px-6">
-          {/* Logo Branding */}
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-tr from-indigo-500 to-violet-600 rounded-xl shadow-lg shrink-0">
-                <Utensils size={24} className="text-white" />
+        {/* Logo Branding */}
+        <div className="h-20 flex items-center gap-3 px-6 shrink-0 border-b border-transparent">
+          <div className="p-2 bg-gradient-to-tr from-indigo-500 to-violet-600 rounded-xl shadow-lg shrink-0">
+            <Utensils size={24} className="text-white" />
+          </div>
+          <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+            FoodaaS
+          </span>
+        </div>
+
+        {/* Sidebar Navigation */}
+        <div className="flex-1 overflow-y-auto py-4 px-3 space-y-2">
+          {menuGroups.map((group, idx) => {
+            const Icon = group.icon;
+            
+            if (!group.items) {
+               const isActive = activeTab === group.id;
+               return (
+                 <button
+                   key={idx}
+                   onClick={() => {
+                     setActiveTab(group.id);
+                     setSelectedItem(null);
+                   }}
+                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
+                     isActive 
+                       ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' 
+                       : `text-slate-500 ${
+                           darkMode 
+                             ? 'hover:text-slate-200 hover:bg-slate-800/80' 
+                             : 'hover:text-slate-900 hover:bg-slate-100'
+                         }`
+                   }`}
+                 >
+                   <Icon size={20} className={isActive ? 'text-white' : ''} />
+                   <span className="font-bold text-sm tracking-wide">{group.groupLabel}</span>
+                 </button>
+               );
+            }
+
+            const isGroupActive = group.items.some(i => i.id === activeTab);
+            
+            return (
+              <div key={idx} className="space-y-1">
+                <div className={`flex items-center gap-3 px-4 py-2 mt-4 mb-2`}>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                    {group.groupLabel}
+                  </span>
+                </div>
+                {group.items.map(subItem => {
+                   const isSubActive = activeTab === subItem.id;
+                   return (
+                     <button
+                       key={subItem.id}
+                       onClick={() => {
+                         setActiveTab(subItem.id);
+                         setSelectedItem(null);
+                       }}
+                       className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors cursor-pointer ${
+                         isSubActive 
+                           ? 'bg-indigo-500/15 text-indigo-500' 
+                           : darkMode ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+                       }`}
+                     >
+                       <div className={`w-1.5 h-1.5 rounded-full ${isSubActive ? 'bg-indigo-500' : 'bg-slate-400/30'}`} />
+                       {subItem.label}
+                     </button>
+                   )
+                })}
               </div>
-              <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
-                FoodaaS
-              </span>
-            </div>
-            
-            <div className={`hidden md:block h-8 w-px ${darkMode ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
-            
-            <div className="hidden md:block">
-              <h2 className={`text-2xl font-extrabold tracking-tight ${textPrimary}`}>
-                {activeTab.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-              </h2>
-              <p className={`text-xs font-bold uppercase tracking-wider ${textSecondary}`}>
-                System control board
-              </p>
-            </div>
+            );
+          })}
+        </div>
+      </aside>
+
+      {/* Main Workspace (Top bar + Content) */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Top Header */}
+        <header className={`h-20 flex items-center justify-between px-6 z-10 transition-all shadow-sm shrink-0 ${
+          darkMode ? 'bg-slate-950/80 border-b border-slate-900 backdrop-blur-md' : 'bg-white/80 border-b border-slate-200 backdrop-blur-md'
+        }`}>
+          {/* Page Title */}
+          <div>
+            <h2 className={`text-2xl font-extrabold tracking-tight ${textPrimary}`}>
+              {activeTab.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+            </h2>
+            <p className={`text-xs font-bold uppercase tracking-wider ${textSecondary}`}>
+              System control board
+            </p>
           </div>
 
           {/* Right Side Tools */}
           <div className="flex items-center gap-4">
-            {/* Theme Toggle */}
-            <button 
-              onClick={() => setDarkMode(!darkMode)}
-              className={`w-10 h-10 border rounded-xl flex items-center justify-center transition-colors cursor-pointer ${
-                darkMode ? 'bg-slate-900 border-slate-800 text-amber-400 hover:bg-slate-800' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
-              }`}
-            >
-              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
 
-            {/* Notification Bells */}
+
             <div className="relative">
               <button className={`w-10 h-10 border rounded-xl flex items-center justify-center transition-colors shadow-sm cursor-pointer ${
                 darkMode ? 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
@@ -399,7 +602,6 @@ const SuperAdminDashboard = () => {
 
             <div className={`h-8 w-px mx-2 ${darkMode ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
 
-            {/* Profile Card & Logout */}
             <div className={`flex items-center gap-3 p-1.5 pr-4 rounded-xl border transition-colors ${
               darkMode ? 'bg-slate-900/40 border-slate-800/60 hover:bg-slate-800/80' : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
             }`}>
@@ -421,97 +623,12 @@ const SuperAdminDashboard = () => {
               </button>
             </div>
           </div>
-        </div>
+        </header>
 
-        {/* Navigation Links in Navbar */}
-        <div 
-          className={`flex items-center gap-3 flex-wrap px-6 py-4 border-t ${
-            darkMode ? 'border-slate-800/60 bg-slate-950/40' : 'border-slate-200 bg-slate-50/50'
-          }`}
-        >
-          {menuGroups.map((group, idx) => {
-            const Icon = group.icon;
-            
-            if (!group.items) {
-               // Single item like Dashboard
-               const isActive = activeTab === group.id;
-               return (
-                 <button
-                   key={idx}
-                   onClick={() => {
-                     setActiveTab(group.id);
-                     setSelectedItem(null);
-                   }}
-                   className={`flex shrink-0 items-center gap-3 px-6 py-3 rounded-full transition-all duration-200 cursor-pointer ${
-                     isActive 
-                       ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 ring-2 ring-indigo-600/20' 
-                       : `text-slate-500 ${
-                           darkMode 
-                             ? 'hover:text-slate-100 hover:bg-slate-800/80' 
-                             : 'hover:text-slate-900 hover:bg-slate-200/60'
-                         }`
-                   }`}
-                 >
-                   <Icon size={22} className={isActive ? 'text-white' : ''} />
-                   <span className="font-extrabold text-[15px] tracking-wide whitespace-nowrap">{group.groupLabel}</span>
-                 </button>
-               );
-            }
-
-            // Group Item (Dropdown)
-            const isGroupActive = group.items.some(i => i.id === activeTab);
-            
-            return (
-              <div key={idx} className="relative group shrink-0">
-                <button
-                  className={`flex shrink-0 items-center gap-3 px-6 py-3 rounded-full transition-all duration-200 cursor-pointer ${
-                    isGroupActive 
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 ring-2 ring-indigo-600/20' 
-                      : `text-slate-500 ${
-                          darkMode 
-                            ? 'hover:text-slate-100 hover:bg-slate-800/80' 
-                            : 'hover:text-slate-900 hover:bg-slate-200/60'
-                        }`
-                  }`}
-                >
-                  <Icon size={22} className={isGroupActive ? 'text-white' : ''} />
-                  <span className="font-extrabold text-[15px] tracking-wide whitespace-nowrap">{group.groupLabel}</span>
-                </button>
-
-                {/* Dropdown Menu */}
-                <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pt-2">
-                  <div className={`p-2 rounded-2xl shadow-xl border ${darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
-                    {group.items.map(subItem => {
-                       const isSubActive = activeTab === subItem.id;
-                       return (
-                         <button
-                           key={subItem.id}
-                           onClick={() => {
-                             setActiveTab(subItem.id);
-                             setSelectedItem(null);
-                           }}
-                           className={`w-full text-left px-4 py-2.5 rounded-xl font-bold text-sm mb-1 last:mb-0 transition-colors cursor-pointer ${
-                             isSubActive 
-                               ? 'bg-indigo-500/10 text-indigo-500' 
-                               : darkMode ? 'text-slate-400 hover:bg-slate-800 hover:text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                           }`}
-                         >
-                           {subItem.label}
-                         </button>
-                       )
-                    })}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </header>
-
-      {/* Main Panel Content Area */}
-      <main className="flex-1 flex flex-col overflow-hidden">
-        {/* Scrollable Dashboard Workspace */}
-        <div className="flex-1 p-6 overflow-y-auto space-y-6">
+        {/* Main Panel Content Area */}
+        <main className="flex-1 flex flex-col overflow-hidden">
+          {/* Scrollable Dashboard Workspace */}
+          <div className="flex-1 p-6 overflow-y-auto space-y-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -528,6 +645,7 @@ const SuperAdminDashboard = () => {
                     {[
                       { title: 'Total Restaurants', value: stats.metrics.totalRestaurants, trend: '+3 this month', color: 'indigo', icon: Utensils },
                       { title: 'Active Restaurants', value: stats.metrics.activeRestaurants, trend: 'Healthy subscription base', color: 'emerald', icon: CheckCircle },
+                      { title: 'Suspended Restaurants', value: stats.metrics.suspendedRestaurants, trend: 'Action required', color: 'amber', icon: HelpCircle },
                       { title: 'Expired Subscriptions', value: stats.metrics.expiredSubscriptions, trend: 'Requires attention', color: 'red', icon: ShieldAlert },
                       { title: 'Monthly Revenue', value: `${systemSettings?.currencySymbol || '₹'}${stats.metrics.monthlyRevenue.toLocaleString('en-IN')}`, trend: '+15.2% vs last month', color: 'amber', icon: DollarSign },
                       { title: 'Total Orders', value: stats.metrics.totalOrders, trend: 'Across all tables', color: 'cyan', icon: ShoppingBag },
@@ -730,38 +848,95 @@ const SuperAdminDashboard = () => {
                     </div>
                   </div>
 
+                  {/* Bulk Actions Bar */}
+                  {selectedRestaurantIds.length > 0 && (
+                    <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3 flex items-center justify-between shadow-sm animate-in fade-in slide-in-from-bottom-2">
+                      <div className="flex items-center gap-2 text-indigo-700 font-bold text-sm">
+                        <CheckCircle size={18} />
+                        <span>{selectedRestaurantIds.length} restaurants selected</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => handleBulkStatusChange('active')} className="px-3 py-1.5 bg-white border border-indigo-200 text-indigo-600 rounded-lg text-xs font-bold hover:bg-indigo-50">Activate</button>
+                        <button onClick={() => handleBulkStatusChange('suspended')} className="px-3 py-1.5 bg-white border border-amber-200 text-amber-600 rounded-lg text-xs font-bold hover:bg-amber-50">Suspend</button>
+                        <button onClick={handleBulkDelete} className="px-3 py-1.5 bg-white border border-red-200 text-red-600 rounded-lg text-xs font-bold hover:bg-red-50">Delete</button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Restaurants Table */}
                   <div className={`rounded-2xl border overflow-hidden ${bgCard}`}>
                     <div className="overflow-x-auto">
                       <table className="w-full text-left border-collapse text-xs">
                         <thead>
                           <tr className={`border-b font-extrabold uppercase tracking-widest ${darkMode ? 'bg-slate-900/50 border-slate-800 text-slate-400' : 'bg-slate-50 border-slate-100 text-slate-500'}`}>
+                            <th className="p-4 w-10">
+                              <input 
+                                type="checkbox"
+                                className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-600"
+                                checked={selectedRestaurantIds.length === currentRestaurants.length && currentRestaurants.length > 0}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedRestaurantIds(currentRestaurants.map(r => r.id));
+                                  } else {
+                                    setSelectedRestaurantIds([]);
+                                  }
+                                }}
+                              />
+                            </th>
                             <th className="p-4">Restaurant</th>
                             <th className="p-4">Owner Details</th>
-                            <th className="p-4">Plan Name</th>
-                            <th className="p-4">Expiry Date</th>
-                            <th className="p-4">Status</th>
+                            <th className="p-4 cursor-pointer hover:bg-slate-800/5 transition-colors" onClick={() => handleSort('plan')}>
+                              <div className="flex items-center gap-1">
+                                Plan Name
+                                {sortConfig.key === 'plan' && (sortConfig.direction === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
+                              </div>
+                            </th>
+                            <th className="p-4 cursor-pointer hover:bg-slate-800/5 transition-colors" onClick={() => handleSort('expiry')}>
+                              <div className="flex items-center gap-1">
+                                Expiry Date
+                                {sortConfig.key === 'expiry' && (sortConfig.direction === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
+                              </div>
+                            </th>
+                            <th className="p-4 cursor-pointer hover:bg-slate-800/5 transition-colors" onClick={() => handleSort('status')}>
+                              <div className="flex items-center gap-1">
+                                Status
+                                {sortConfig.key === 'status' && (sortConfig.direction === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
+                              </div>
+                            </th>
                             <th className="p-4 text-right">Actions</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-800/50">
-                          {restaurants
-                            .filter(r => {
-                              const matchesSearch = r.restaurantName.toLowerCase().includes(restSearch.toLowerCase()) ||
-                                r.ownerName.toLowerCase().includes(restSearch.toLowerCase()) ||
-                                r.email.toLowerCase().includes(restSearch.toLowerCase());
-                              
-                              const matchesStatus = restStatusFilter === 'all' || r.status === restStatusFilter;
-                              const matchesPlan = restPlanFilter === 'all' || r.plan === restPlanFilter;
-                              return matchesSearch && matchesStatus && matchesPlan;
-                            })
-                            .map((r) => {
+                          {currentRestaurants.length === 0 ? (
+                            <tr>
+                              <td colSpan="7" className="p-12 text-center">
+                                <div className="flex flex-col items-center justify-center">
+                                  <Search size={32} className="text-slate-300 mb-3" />
+                                  <p className="text-sm font-bold text-slate-500">No restaurants found matching your search or filters.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          ) : currentRestaurants.map((r) => {
                               let statusBadge = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
                               if (r.status === 'suspended') statusBadge = "bg-amber-500/10 text-amber-400 border-amber-500/20";
                               if (r.status === 'expired') statusBadge = "bg-red-500/10 text-red-400 border-red-500/20";
 
                               return (
-                                <tr key={r.id} className={`hover:bg-slate-850/20 transition-colors ${darkMode ? 'hover:bg-slate-900/20' : 'hover:bg-slate-50/50'}`}>
+                                <tr key={r.id} onClick={() => setDrawerRestaurant(r)} className={`cursor-pointer hover:bg-slate-850/20 transition-colors ${darkMode ? 'hover:bg-slate-900/20' : 'hover:bg-slate-50/50'}`}>
+                                  <td className="p-4" onClick={e => e.stopPropagation()}>
+                                    <input 
+                                      type="checkbox"
+                                      className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-600"
+                                      checked={selectedRestaurantIds.includes(r.id)}
+                                      onChange={(e) => {
+                                        if (e.target.checked) {
+                                          setSelectedRestaurantIds(prev => [...prev, r.id]);
+                                        } else {
+                                          setSelectedRestaurantIds(prev => prev.filter(id => id !== r.id));
+                                        }
+                                      }}
+                                    />
+                                  </td>
                                   <td className="p-4">
                                     <p className={`font-extrabold text-sm ${textPrimary}`}>{r.restaurantName}</p>
                                     <p className="text-[10px] text-slate-500 mt-0.5">ID: {r.id.slice(-6)}</p>
@@ -784,8 +959,9 @@ const SuperAdminDashboard = () => {
                                       {r.status}
                                     </span>
                                   </td>
-                                  <td className="p-4 text-right space-x-1.5 shrink-0">
+                                  <td className="p-4 text-right space-x-1.5 shrink-0" onClick={e => e.stopPropagation()}>
                                     <button 
+                                      title="Edit Restaurant"
                                       onClick={() => {
                                         setSelectedItem(r);
                                         setActiveModal('edit_restaurant');
@@ -795,12 +971,14 @@ const SuperAdminDashboard = () => {
                                       <Edit size={14} />
                                     </button>
                                     <button 
+                                      title={r.status === 'suspended' ? 'Activate Restaurant' : 'Suspend Restaurant'}
                                       onClick={() => handleStatusChange(r.id, r.status)}
                                       className={`p-1.5 border rounded-lg hover:bg-amber-500/10 hover:text-amber-400 text-slate-500 cursor-pointer ${borderPrimary}`}
                                     >
                                       {r.status === 'suspended' ? <CheckCircle size={14} /> : <ShieldAlert size={14} />}
                                     </button>
                                     <button 
+                                      title="Extend Subscription"
                                       onClick={() => {
                                         setSelectedItem({ id: r.id, days: 30 });
                                         setActiveModal('extend_sub');
@@ -810,6 +988,7 @@ const SuperAdminDashboard = () => {
                                       <Calendar size={14} />
                                     </button>
                                     <button 
+                                      title="Delete Restaurant"
                                       onClick={() => handleDeleteRestaurant(r.id)}
                                       className={`p-1.5 border rounded-lg hover:bg-red-500/10 hover:text-red-400 text-slate-500 cursor-pointer ${borderPrimary}`}
                                     >
@@ -821,6 +1000,24 @@ const SuperAdminDashboard = () => {
                             })}
                         </tbody>
                       </table>
+                    </div>
+                    {/* Pagination Controls */}
+                    <div className="p-4 border-t border-slate-800/50 flex items-center justify-between">
+                      <div className="text-xs font-bold text-slate-500">
+                        Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, processedRestaurants.length)} of {processedRestaurants.length} entries
+                      </div>
+                      <div className="flex gap-1">
+                        <button 
+                          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                          disabled={currentPage === 1}
+                          className={`p-1.5 border rounded-lg disabled:opacity-50 text-slate-500 cursor-pointer ${darkMode ? 'hover:bg-slate-800/50 border-slate-800' : 'hover:bg-slate-100 border-slate-200'}`}
+                        ><ChevronLeft size={14}/></button>
+                        <button 
+                          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                          disabled={currentPage === totalPages || totalPages === 0}
+                          className={`p-1.5 border rounded-lg disabled:opacity-50 text-slate-500 cursor-pointer ${darkMode ? 'hover:bg-slate-800/50 border-slate-800' : 'hover:bg-slate-100 border-slate-200'}`}
+                        ><ChevronRight size={14}/></button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1020,7 +1217,7 @@ const SuperAdminDashboard = () => {
                                   </button>
                                   <button
                                     onClick={() => {
-                                      alert(`Reminder email notification dispatched to ${r.ownerName} (${r.email})`);
+                                      showToast(`Reminder email notification dispatched to ${r.ownerName} (${r.email})`, "success");
                                     }}
                                     className={`p-1.5 border rounded-lg hover:bg-slate-800/10 text-slate-500 cursor-pointer ${borderPrimary}`}
                                   >
@@ -1207,7 +1404,7 @@ const SuperAdminDashboard = () => {
                           <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl flex items-center justify-center">
                             <button
                               onClick={() => {
-                                alert(`Downloading high-res QR Code PDF for ${qr.restaurant} - ${qr.tableName}...`);
+                                showToast(`Downloading high-res QR Code PDF for ${qr.restaurant} - ${qr.tableName}...`, "success");
                               }}
                               className="p-3 bg-indigo-600 rounded-full text-white cursor-pointer hover:bg-indigo-700 shadow-md shadow-indigo-600/30"
                             >
@@ -1301,7 +1498,7 @@ const SuperAdminDashboard = () => {
                       <h3 className={`font-black text-sm ${textPrimary}`}>Platform Administrators</h3>
                       <button
                         onClick={() => {
-                          alert('Adding new administrative credentials...');
+                          showToast('Adding new administrative credentials...', "success");
                         }}
                         className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold text-[10px] flex items-center gap-1.5 cursor-pointer shadow-md"
                       >
@@ -1527,7 +1724,7 @@ const SuperAdminDashboard = () => {
                         };
                         setCoupons(prev => [newC, ...prev]);
                         setCouponForm({ code: '', discount: '', maxUses: '', expiryDate: '' });
-                        alert('Promo Code created successfully!');
+                        showToast('Promo Code created successfully!', "success");
                       }}
                       className="space-y-4"
                     >
@@ -1624,6 +1821,30 @@ const SuperAdminDashboard = () => {
                       </table>
                     </div>
                   </div>
+                </div>
+              )}
+
+              {activeTab === 'activity_log' && (
+                <div className={`p-8 rounded-3xl border text-center ${bgCard}`}>
+                  <Activity size={48} className={`mx-auto mb-4 ${textSecondary}`} />
+                  <h3 className={`text-xl font-black ${textPrimary}`}>Activity Log</h3>
+                  <p className={`text-sm mt-2 ${textSecondary}`}>This module is currently under development.</p>
+                </div>
+              )}
+
+              {activeTab === 'broadcast_tool' && (
+                <div className={`p-8 rounded-3xl border text-center ${bgCard}`}>
+                  <Mail size={48} className={`mx-auto mb-4 ${textSecondary}`} />
+                  <h3 className={`text-xl font-black ${textPrimary}`}>Broadcast / Email Tool</h3>
+                  <p className={`text-sm mt-2 ${textSecondary}`}>This module is currently under development.</p>
+                </div>
+              )}
+
+              {activeTab === 'onboarding' && (
+                <div className={`p-8 rounded-3xl border text-center ${bgCard}`}>
+                  <CheckCircle size={48} className={`mx-auto mb-4 ${textSecondary}`} />
+                  <h3 className={`text-xl font-black ${textPrimary}`}>Onboarding Tracker</h3>
+                  <p className={`text-sm mt-2 ${textSecondary}`}>This module is currently under development.</p>
                 </div>
               )}
 
@@ -2163,6 +2384,107 @@ const SuperAdminDashboard = () => {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Side Drawer for Restaurant Details */}
+      <AnimatePresence>
+        {drawerRestaurant && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setDrawerRestaurant(null)}
+              className="fixed inset-0 z-[60] bg-slate-950/50 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className={`fixed top-0 right-0 bottom-0 w-full max-w-md shadow-2xl z-[70] border-l flex flex-col ${darkMode ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-200'}`}
+            >
+              <div className="p-6 border-b border-slate-800/50 flex items-center justify-between shrink-0">
+                <h3 className={`text-xl font-black ${textPrimary}`}>Restaurant Details</h3>
+                <button onClick={() => setDrawerRestaurant(null)} className={`p-2 rounded-full text-slate-500 ${darkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}><X size={20} /></button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                <div>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Information</p>
+                  <h4 className={`text-2xl font-black ${textPrimary}`}>{drawerRestaurant.restaurantName}</h4>
+                  <p className={`text-sm font-semibold mt-1 ${textSecondary}`}>ID: {drawerRestaurant.id}</p>
+                </div>
+                <div className={`p-4 rounded-xl border ${bgCard} grid grid-cols-2 gap-4`}>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase">Owner</p>
+                    <p className={`text-sm font-bold mt-0.5 ${textPrimary}`}>{drawerRestaurant.ownerName}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase">Status</p>
+                    <p className={`text-sm font-bold mt-0.5 ${textPrimary}`}>{drawerRestaurant.status}</p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase">Contact</p>
+                    <p className={`text-sm font-bold mt-0.5 flex items-center gap-2 ${textPrimary}`}><Mail size={14}/> {drawerRestaurant.email}</p>
+                    <p className={`text-sm font-bold mt-0.5 flex items-center gap-2 ${textPrimary}`}><Phone size={14}/> {drawerRestaurant.phone}</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Subscription</p>
+                  <div className={`p-4 rounded-xl border flex items-center justify-between ${bgCard}`}>
+                    <div>
+                      <p className={`text-sm font-black ${textPrimary}`}>{drawerRestaurant.plan}</p>
+                      <p className={`text-xs font-semibold mt-0.5 ${textSecondary}`}>Expires: {drawerRestaurant.subscriptionExpiry ? new Date(drawerRestaurant.subscriptionExpiry).toLocaleDateString() : 'N/A'}</p>
+                    </div>
+                    <Calendar className="text-indigo-500" size={24} />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Custom Confirmation Modal */}
+      <AnimatePresence>
+        {confirmDialog && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className={`w-full max-w-sm p-6 rounded-3xl border shadow-2xl relative ${
+                darkMode ? 'bg-slate-900 border-slate-800 text-slate-100' : 'bg-white border-slate-100 text-slate-800'
+              }`}
+            >
+              <div className="flex flex-col items-center text-center">
+                <div className={`p-4 rounded-full mb-4 ${confirmDialog.intent === 'danger' ? 'bg-red-500/10 text-red-500' : confirmDialog.intent === 'warning' ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                  <AlertTriangle size={32} />
+                </div>
+                <h3 className="text-lg font-black mb-2">Confirm Action</h3>
+                <p className="text-sm font-semibold text-slate-400 mb-6">{confirmDialog.message}</p>
+                <div className="flex gap-3 w-full">
+                  <button onClick={confirmDialog.onCancel} className={`flex-1 py-2.5 rounded-xl font-bold text-xs border hover:bg-slate-800/10 cursor-pointer ${borderPrimary}`}>Cancel</button>
+                  <button onClick={confirmDialog.onConfirm} className={`flex-1 py-2.5 rounded-xl font-bold text-xs text-white shadow-md cursor-pointer ${confirmDialog.intent === 'danger' ? 'bg-red-600 hover:bg-red-700' : confirmDialog.intent === 'warning' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'}`}>Confirm</button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Global Toast Notification System */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.3 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+            className={`fixed bottom-6 right-6 z-[100] px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 font-bold text-sm ${
+              toast.type === 'error' ? 'bg-red-600 text-white shadow-red-600/30' : 'bg-emerald-600 text-white shadow-emerald-600/30'
+            }`}
+          >
+            {toast.type === 'error' ? <AlertTriangle size={18} /> : <CheckCircle size={18} />}
+            <span>{toast.message}</span>
+            <button onClick={() => setToast(null)} className="ml-2 hover:bg-white/20 p-1 rounded-full"><X size={14} /></button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      </div>
     </div>
   );
 };
