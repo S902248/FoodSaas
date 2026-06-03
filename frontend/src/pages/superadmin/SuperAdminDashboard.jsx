@@ -346,38 +346,104 @@ const SuperAdminDashboard = () => {
   ];
 
   return (
-    <div className={`min-h-screen flex flex-col overflow-hidden font-sans transition-colors duration-200 ${bgMain}`}>
-      {/* Top Navbar & Header */}
-      <header className={`flex flex-col z-20 transition-all shadow-sm ${
-        darkMode ? 'bg-slate-950 border-b border-slate-900 backdrop-blur-md' : 'bg-white border-b border-slate-200'
+    <div className={`h-screen flex overflow-hidden font-sans transition-colors duration-200 ${bgMain}`}>
+      {/* Sidebar */}
+      <aside className={`w-64 flex flex-col shrink-0 z-20 transition-all ${
+        darkMode ? 'bg-slate-950 border-r border-slate-900' : 'bg-white border-r border-slate-200'
       }`}>
-        <div className="h-20 flex items-center justify-between px-6">
-          {/* Logo Branding */}
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-tr from-indigo-500 to-violet-600 rounded-xl shadow-lg shrink-0">
-                <Utensils size={24} className="text-white" />
+        {/* Logo Branding */}
+        <div className="h-20 flex items-center gap-3 px-6 shrink-0 border-b border-transparent">
+          <div className="p-2 bg-gradient-to-tr from-indigo-500 to-violet-600 rounded-xl shadow-lg shrink-0">
+            <Utensils size={24} className="text-white" />
+          </div>
+          <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+            FoodaaS
+          </span>
+        </div>
+
+        {/* Sidebar Navigation */}
+        <div className="flex-1 overflow-y-auto py-4 px-3 space-y-2">
+          {menuGroups.map((group, idx) => {
+            const Icon = group.icon;
+            
+            if (!group.items) {
+               const isActive = activeTab === group.id;
+               return (
+                 <button
+                   key={idx}
+                   onClick={() => {
+                     setActiveTab(group.id);
+                     setSelectedItem(null);
+                   }}
+                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
+                     isActive 
+                       ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' 
+                       : `text-slate-500 ${
+                           darkMode 
+                             ? 'hover:text-slate-200 hover:bg-slate-800/80' 
+                             : 'hover:text-slate-900 hover:bg-slate-100'
+                         }`
+                   }`}
+                 >
+                   <Icon size={20} className={isActive ? 'text-white' : ''} />
+                   <span className="font-bold text-sm tracking-wide">{group.groupLabel}</span>
+                 </button>
+               );
+            }
+
+            const isGroupActive = group.items.some(i => i.id === activeTab);
+            
+            return (
+              <div key={idx} className="space-y-1">
+                <div className={`flex items-center gap-3 px-4 py-2 mt-4 mb-2`}>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                    {group.groupLabel}
+                  </span>
+                </div>
+                {group.items.map(subItem => {
+                   const isSubActive = activeTab === subItem.id;
+                   return (
+                     <button
+                       key={subItem.id}
+                       onClick={() => {
+                         setActiveTab(subItem.id);
+                         setSelectedItem(null);
+                       }}
+                       className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors cursor-pointer ${
+                         isSubActive 
+                           ? 'bg-indigo-500/15 text-indigo-500' 
+                           : darkMode ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+                       }`}
+                     >
+                       <div className={`w-1.5 h-1.5 rounded-full ${isSubActive ? 'bg-indigo-500' : 'bg-slate-400/30'}`} />
+                       {subItem.label}
+                     </button>
+                   )
+                })}
               </div>
-              <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
-                FoodaaS
-              </span>
-            </div>
-            
-            <div className={`hidden md:block h-8 w-px ${darkMode ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
-            
-            <div className="hidden md:block">
-              <h2 className={`text-2xl font-extrabold tracking-tight ${textPrimary}`}>
-                {activeTab.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-              </h2>
-              <p className={`text-xs font-bold uppercase tracking-wider ${textSecondary}`}>
-                System control board
-              </p>
-            </div>
+            );
+          })}
+        </div>
+      </aside>
+
+      {/* Main Workspace (Top bar + Content) */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Top Header */}
+        <header className={`h-20 flex items-center justify-between px-6 z-10 transition-all shadow-sm shrink-0 ${
+          darkMode ? 'bg-slate-950/80 border-b border-slate-900 backdrop-blur-md' : 'bg-white/80 border-b border-slate-200 backdrop-blur-md'
+        }`}>
+          {/* Page Title */}
+          <div>
+            <h2 className={`text-2xl font-extrabold tracking-tight ${textPrimary}`}>
+              {activeTab.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+            </h2>
+            <p className={`text-xs font-bold uppercase tracking-wider ${textSecondary}`}>
+              System control board
+            </p>
           </div>
 
           {/* Right Side Tools */}
           <div className="flex items-center gap-4">
-            {/* Theme Toggle */}
             <button 
               onClick={() => setDarkMode(!darkMode)}
               className={`w-10 h-10 border rounded-xl flex items-center justify-center transition-colors cursor-pointer ${
@@ -387,7 +453,6 @@ const SuperAdminDashboard = () => {
               {darkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
 
-            {/* Notification Bells */}
             <div className="relative">
               <button className={`w-10 h-10 border rounded-xl flex items-center justify-center transition-colors shadow-sm cursor-pointer ${
                 darkMode ? 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
@@ -399,7 +464,6 @@ const SuperAdminDashboard = () => {
 
             <div className={`h-8 w-px mx-2 ${darkMode ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
 
-            {/* Profile Card & Logout */}
             <div className={`flex items-center gap-3 p-1.5 pr-4 rounded-xl border transition-colors ${
               darkMode ? 'bg-slate-900/40 border-slate-800/60 hover:bg-slate-800/80' : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
             }`}>
@@ -421,97 +485,12 @@ const SuperAdminDashboard = () => {
               </button>
             </div>
           </div>
-        </div>
+        </header>
 
-        {/* Navigation Links in Navbar */}
-        <div 
-          className={`flex items-center gap-3 flex-wrap px-6 py-4 border-t ${
-            darkMode ? 'border-slate-800/60 bg-slate-950/40' : 'border-slate-200 bg-slate-50/50'
-          }`}
-        >
-          {menuGroups.map((group, idx) => {
-            const Icon = group.icon;
-            
-            if (!group.items) {
-               // Single item like Dashboard
-               const isActive = activeTab === group.id;
-               return (
-                 <button
-                   key={idx}
-                   onClick={() => {
-                     setActiveTab(group.id);
-                     setSelectedItem(null);
-                   }}
-                   className={`flex shrink-0 items-center gap-3 px-6 py-3 rounded-full transition-all duration-200 cursor-pointer ${
-                     isActive 
-                       ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 ring-2 ring-indigo-600/20' 
-                       : `text-slate-500 ${
-                           darkMode 
-                             ? 'hover:text-slate-100 hover:bg-slate-800/80' 
-                             : 'hover:text-slate-900 hover:bg-slate-200/60'
-                         }`
-                   }`}
-                 >
-                   <Icon size={22} className={isActive ? 'text-white' : ''} />
-                   <span className="font-extrabold text-[15px] tracking-wide whitespace-nowrap">{group.groupLabel}</span>
-                 </button>
-               );
-            }
-
-            // Group Item (Dropdown)
-            const isGroupActive = group.items.some(i => i.id === activeTab);
-            
-            return (
-              <div key={idx} className="relative group shrink-0">
-                <button
-                  className={`flex shrink-0 items-center gap-3 px-6 py-3 rounded-full transition-all duration-200 cursor-pointer ${
-                    isGroupActive 
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 ring-2 ring-indigo-600/20' 
-                      : `text-slate-500 ${
-                          darkMode 
-                            ? 'hover:text-slate-100 hover:bg-slate-800/80' 
-                            : 'hover:text-slate-900 hover:bg-slate-200/60'
-                        }`
-                  }`}
-                >
-                  <Icon size={22} className={isGroupActive ? 'text-white' : ''} />
-                  <span className="font-extrabold text-[15px] tracking-wide whitespace-nowrap">{group.groupLabel}</span>
-                </button>
-
-                {/* Dropdown Menu */}
-                <div className="absolute top-full left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pt-2">
-                  <div className={`p-2 rounded-2xl shadow-xl border ${darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
-                    {group.items.map(subItem => {
-                       const isSubActive = activeTab === subItem.id;
-                       return (
-                         <button
-                           key={subItem.id}
-                           onClick={() => {
-                             setActiveTab(subItem.id);
-                             setSelectedItem(null);
-                           }}
-                           className={`w-full text-left px-4 py-2.5 rounded-xl font-bold text-sm mb-1 last:mb-0 transition-colors cursor-pointer ${
-                             isSubActive 
-                               ? 'bg-indigo-500/10 text-indigo-500' 
-                               : darkMode ? 'text-slate-400 hover:bg-slate-800 hover:text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                           }`}
-                         >
-                           {subItem.label}
-                         </button>
-                       )
-                    })}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </header>
-
-      {/* Main Panel Content Area */}
-      <main className="flex-1 flex flex-col overflow-hidden">
-        {/* Scrollable Dashboard Workspace */}
-        <div className="flex-1 p-6 overflow-y-auto space-y-6">
+        {/* Main Panel Content Area */}
+        <main className="flex-1 flex flex-col overflow-hidden">
+          {/* Scrollable Dashboard Workspace */}
+          <div className="flex-1 p-6 overflow-y-auto space-y-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -2163,6 +2142,7 @@ const SuperAdminDashboard = () => {
           </div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 };
