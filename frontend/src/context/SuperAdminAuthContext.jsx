@@ -5,7 +5,7 @@ export const SuperAdminAuthContext = createContext();
 
 export const SuperAdminAuthProvider = ({ children }) => {
   const [admin, setAdmin] = useState(null);
-  const [adminToken, setAdminToken] = useState(localStorage.getItem('superadmin_token'));
+  const [adminToken, setAdminToken] = useState(sessionStorage.getItem('superadmin_token'));
   const [adminLoading, setAdminLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const SuperAdminAuthProvider = ({ children }) => {
       setAdmin(res.data);
     } catch (err) {
       console.error('Error fetching admin profile:', err);
-      localStorage.removeItem('superadmin_token');
+      sessionStorage.removeItem('superadmin_token');
       setAdminToken(null);
       setAdmin(null);
     } finally {
@@ -35,14 +35,14 @@ export const SuperAdminAuthProvider = ({ children }) => {
   const adminLogin = async (email, password) => {
     const res = await axios.post('http://localhost:5000/api/superadmin/login', { email, password });
     const newToken = res.data.token;
-    localStorage.setItem('superadmin_token', newToken);
+    sessionStorage.setItem('superadmin_token', newToken);
     setAdminToken(newToken);
     setAdmin(res.data.admin);
     return res.data;
   };
 
   const adminLogout = () => {
-    localStorage.removeItem('superadmin_token');
+    sessionStorage.removeItem('superadmin_token');
     setAdminToken(null);
     setAdmin(null);
   };
