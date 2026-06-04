@@ -904,6 +904,15 @@
       "id": "670e111d484e6c44a98dfb5e",
       "createdAt": "2026-06-03T16:18:32.246Z",
       "updatedAt": "2026-06-03T16:18:32.246Z"
+    },
+    {
+      "action": "Login",
+      "details": "Super Admin admin@foodaas.com logged in successfully",
+      "performedBy": "Super Admin",
+      "_id": "1ccdb67b30eaeb0c4f77b26c",
+      "id": "1ccdb67b30eaeb0c4f77b26c",
+      "createdAt": "2026-06-04T04:44:02.400Z",
+      "updatedAt": "2026-06-04T04:44:02.400Z"
     }
   ],
   "Category": [
