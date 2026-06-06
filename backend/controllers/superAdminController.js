@@ -411,22 +411,21 @@ const extendSubscription = async (req, res) => {
     }
 
     let currentExpiry = rest.subscriptionExpiry ? new Date(rest.subscriptionExpiry) : new Date();
-    // If expired, base expiry from today
     if (currentExpiry < new Date()) {
-      currentExpiry = new Date();
+      currentExpiry = new Date(); // Start extension from today if already expired
     }
+    const newExpiry = new Date(currentExpiry.getTime() + (days * 24 * 60 * 60 * 1000));
     
-    currentExpiry.setDate(currentExpiry.getDate() + parseInt(days));
+    const updateObj = { subscriptionExpiry: newExpiry };
+    if (rest.status === 'expired') updateObj.status = 'active';
     
-    rest.subscriptionExpiry = currentExpiry;
-    rest.status = 'active'; // automatically reactivate if extended
-    await rest.save();
+    const updatedRest = await Restaurant.findByIdAndUpdate(req.params.id, { $set: updateObj }, { new: true });
 
-    await logAction('Extend Subscription', `Extended subscription of ${rest.restaurantName} by ${days} days`);
-    res.json(rest);
+    await logAction('Extend Subscription', `Extended subscription of restaurant ${updatedRest.restaurantName} by ${days} days`);
+    res.json(updatedRest);
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
+    console.error('Error extending subscription:', err);
+    res.status(500).json({ message: err.message || 'Server Error' });
   }
 };
 

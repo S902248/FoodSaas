@@ -1233,7 +1233,9 @@ const SuperAdminDashboard = () => {
                                 <td className="p-4 font-bold text-slate-400">{r.plan}</td>
                                 <td className="p-4 font-bold text-slate-400">{new Date(r.createdAt).toLocaleDateString()}</td>
                                 <td className="p-4 font-bold text-slate-300">{expiry.toLocaleDateString()}</td>
-                                <td className="p-4 font-bold text-indigo-400">{diffDays} Days Left</td>
+                                <td className={`p-4 font-bold ${diffDays > 0 ? 'text-indigo-400' : diffDays === 0 ? 'text-amber-400' : 'text-red-400'}`}>
+                                  {diffDays > 0 ? `${diffDays} Days Left` : diffDays === 0 ? 'Expires today' : `Expired ${Math.abs(diffDays)} Days Ago`}
+                                </td>
                                 <td className="p-4">
                                   <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                                     active

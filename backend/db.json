@@ -195,14 +195,15 @@
       "phone": "+91 7654321098",
       "plan": "df97bf4ed5a5edcd3deb4db6",
       "status": "active",
-      "subscriptionExpiry": "2026-05-31T10:40:28.843Z",
+      "subscriptionExpiry": "2026-07-06T11:57:32.673Z",
       "createdAt": "2026-03-05T10:40:28.844Z",
       "resetOtp": null,
       "resetOtpExpires": null,
       "_id": "647a26f0728d259e7589dac5",
       "id": "647a26f0728d259e7589dac5",
-      "updatedAt": "2026-06-06T11:35:07.117Z",
-      "name": "Spice Route"
+      "updatedAt": "2026-06-06T11:57:32.674Z",
+      "name": "Spice Route",
+      "tableLimit": 50
     },
     {
       "restaurantName": "Sushi House",
@@ -229,15 +230,16 @@
       "ownerName": "Sarah Jenkins",
       "phone": "+91 5432109876",
       "plan": "108fb2180423a9f3fbf33a3b",
-      "status": "expired",
-      "subscriptionExpiry": "2026-05-25T21:50:19.548Z",
+      "status": "active",
+      "subscriptionExpiry": "2026-07-06T11:50:51.996Z",
       "createdAt": "2026-05-29T10:40:28.846Z",
       "resetOtp": null,
       "resetOtpExpires": null,
       "_id": "fe9750b1af36f9e1dbd2c818",
       "id": "fe9750b1af36f9e1dbd2c818",
-      "updatedAt": "2026-06-03T10:40:28.846Z",
-      "name": "The Burger Club"
+      "updatedAt": "2026-06-06T11:50:51.997Z",
+      "name": "The Burger Club",
+      "tableLimit": 50
     },
     {
       "restaurantName": "Test Notification Restaurant",
@@ -1308,6 +1310,24 @@
       "id": "f8bab5dc54bd357850fe4fd2",
       "createdAt": "2026-06-06T11:35:51.089Z",
       "updatedAt": "2026-06-06T11:35:51.089Z"
+    },
+    {
+      "action": "Extend Subscription",
+      "details": "Extended subscription of The Burger Club by 30 days",
+      "performedBy": "Super Admin",
+      "_id": "dd4eceb7e84a20c1f5d2bb32",
+      "id": "dd4eceb7e84a20c1f5d2bb32",
+      "createdAt": "2026-06-06T11:50:51.999Z",
+      "updatedAt": "2026-06-06T11:50:51.999Z"
+    },
+    {
+      "action": "Extend Subscription",
+      "details": "Extended subscription of Spice Route by 30 days",
+      "performedBy": "Super Admin",
+      "_id": "42c9a23f77024ffd6dded47d",
+      "id": "42c9a23f77024ffd6dded47d",
+      "createdAt": "2026-06-06T11:57:32.675Z",
+      "updatedAt": "2026-06-06T11:57:32.675Z"
     }
   ],
   "Category": [

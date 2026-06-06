@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 const Dashboard = () => {
-  const { restaurant, loading } = useContext(AuthContext);
+  const { restaurant, loading, fetchMe } = useContext(AuthContext);
   const [liveOrders, setLiveOrders] = useState([]);
   const [showExpiredWarning, setShowExpiredWarning] = useState(false);
   const [tables, setTables] = useState([]);
@@ -166,16 +166,27 @@ const Dashboard = () => {
       const interval = setInterval(fetchDashboardData, 5000);
       
       let warnInterval;
+      let checkRenewalInterval;
+      
       if (restaurant.status === 'expired' || (restaurant.subscriptionExpiry && new Date(restaurant.subscriptionExpiry) < new Date())) {
         warnInterval = setInterval(() => {
           setShowExpiredWarning(true);
-        }, 60000); // every minute
+        }, 180000); // every 3 minutes
         setShowExpiredWarning(true); // Show immediately on load too
+        
+        // Also regularly check if the Super Admin has renewed the plan
+        checkRenewalInterval = setInterval(() => {
+          if (fetchMe) fetchMe();
+        }, 15000); // check every 15 seconds
+      } else {
+        // If it was renewed, hide any existing warning
+        setShowExpiredWarning(false);
       }
       
       return () => {
         clearInterval(interval);
         if (warnInterval) clearInterval(warnInterval);
+        if (checkRenewalInterval) clearInterval(checkRenewalInterval);
       };
     }
   }, [loading, restaurant]);
