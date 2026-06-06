@@ -12,7 +12,7 @@ import {
   ShoppingBag, Users, LifeBuoy, Bell, Settings, LogOut, Search,
   Plus, Edit, Trash2, Mail, Phone, ShieldAlert, DollarSign,
   CheckCircle, Calendar, Moon, Sun, Send, Percent, Download,
-  HelpCircle, Activity, FileSpreadsheet, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Menu, MessageSquare, X, AlertTriangle
+  HelpCircle, Activity, FileSpreadsheet, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Menu, MessageSquare, X, AlertTriangle, Key
 } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
 import { io } from 'socket.io-client';
@@ -182,6 +182,19 @@ const SuperAdminDashboard = () => {
       fetchData();
     } catch (err) {
       showToast(err.response?.data?.message || 'Error updating restaurant', "error");
+    }
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.put(`http://localhost:5000/api/superadmin/restaurants/${selectedItem.id}/password`, { password: selectedItem.password }, apiConfig);
+      setActiveModal(null);
+      setSelectedItem(null);
+      showToast('Password updated successfully', 'success');
+      fetchData();
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Error updating password', "error");
     }
   };
 
@@ -1009,8 +1022,20 @@ const SuperAdminDashboard = () => {
                                       {r.plan}
                                     </span>
                                   </td>
-                                  <td className="p-4 font-bold text-slate-400">
-                                    {r.subscriptionExpiry ? new Date(r.subscriptionExpiry).toLocaleDateString() : 'N/A'}
+                                  <td className="p-4">
+                                    <div className="font-bold text-slate-400">
+                                      {r.subscriptionExpiry ? new Date(r.subscriptionExpiry).toLocaleDateString() : 'N/A'}
+                                    </div>
+                                    {r.subscriptionExpiry && (
+                                      <div className="text-[10px] mt-0.5 font-bold">
+                                        {(() => {
+                                          const days = Math.ceil((new Date(r.subscriptionExpiry) - new Date()) / (1000 * 60 * 60 * 24));
+                                          if (days > 0) return <span className="text-emerald-500">{days} days left</span>;
+                                          if (days === 0) return <span className="text-amber-500">Expires today</span>;
+                                          return <span className="text-red-500">Expired {Math.abs(days)} days ago</span>;
+                                        })()}
+                                      </div>
+                                    )}
                                   </td>
                                   <td className="p-4">
                                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-black border uppercase ${statusBadge}`}>
@@ -1018,6 +1043,16 @@ const SuperAdminDashboard = () => {
                                     </span>
                                   </td>
                                   <td className="p-4 text-right space-x-1.5 shrink-0" onClick={e => e.stopPropagation()}>
+                                    <button 
+                                      title="Change Password"
+                                      onClick={() => {
+                                        setSelectedItem({ id: r.id, password: '' });
+                                        setActiveModal('change_password');
+                                      }}
+                                      className={`p-1.5 border rounded-lg hover:bg-emerald-500/10 hover:text-emerald-400 text-slate-500 cursor-pointer ${borderPrimary}`}
+                                    >
+                                      <Key size={14} />
+                                    </button>
                                     <button 
                                       title="Edit Restaurant"
                                       onClick={() => {
@@ -1044,13 +1079,6 @@ const SuperAdminDashboard = () => {
                                       className={`p-1.5 border rounded-lg hover:bg-violet-500/10 hover:text-violet-400 text-slate-500 cursor-pointer ${borderPrimary}`}
                                     >
                                       <Calendar size={14} />
-                                    </button>
-                                    <button 
-                                      title="Delete Restaurant"
-                                      onClick={() => handleDeleteRestaurant(r.id)}
-                                      className={`p-1.5 border rounded-lg hover:bg-red-500/10 hover:text-red-400 text-slate-500 cursor-pointer ${borderPrimary}`}
-                                    >
-                                      <Trash2 size={14} />
                                     </button>
                                   </td>
                                 </tr>
@@ -1205,7 +1233,9 @@ const SuperAdminDashboard = () => {
                                 <td className="p-4 font-bold text-slate-400">{r.plan}</td>
                                 <td className="p-4 font-bold text-slate-400">{new Date(r.createdAt).toLocaleDateString()}</td>
                                 <td className="p-4 font-bold text-slate-300">{expiry.toLocaleDateString()}</td>
-                                <td className="p-4 font-bold text-indigo-400">{diffDays} Days Left</td>
+                                <td className={`p-4 font-bold ${diffDays > 0 ? 'text-indigo-400' : diffDays === 0 ? 'text-amber-400' : 'text-red-400'}`}>
+                                  {diffDays > 0 ? `${diffDays} Days Left` : diffDays === 0 ? 'Expires today' : `Expired ${Math.abs(diffDays)} Days Ago`}
+                                </td>
                                 <td className="p-4">
                                   <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                                     active
@@ -2281,6 +2311,39 @@ const SuperAdminDashboard = () => {
                       className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs cursor-pointer shadow-md"
                     >
                       Add Expiry Days
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* MODAL: CHANGE PASSWORD */}
+              {activeModal === 'change_password' && selectedItem && (
+                <form onSubmit={handleChangePassword} className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase mb-2">New Password</label>
+                    <input
+                      type="password"
+                      required
+                      value={selectedItem.password || ''}
+                      onChange={(e) => setSelectedItem(prev => ({ ...prev, password: e.target.value }))}
+                      placeholder="Enter new password"
+                      className={`w-full px-4 py-2.5 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 ${bgInput}`}
+                    />
+                  </div>
+
+                  <div className="pt-4 flex gap-3 border-t border-slate-800/50 justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setActiveModal(null)}
+                      className={`px-4 py-2 border rounded-xl font-bold text-xs hover:bg-slate-800/10 text-slate-400 cursor-pointer ${borderPrimary}`}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs cursor-pointer shadow-md"
+                    >
+                      Update Password
                     </button>
                   </div>
                 </form>

@@ -395,7 +395,7 @@ const changeStatus = async (req, res) => {
     res.json(rest);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server Error');
+    res.status(500).json({ message: err.message || 'Server Error' });
   }
 };
 
@@ -411,19 +411,45 @@ const extendSubscription = async (req, res) => {
     }
 
     let currentExpiry = rest.subscriptionExpiry ? new Date(rest.subscriptionExpiry) : new Date();
-    // If expired, base expiry from today
     if (currentExpiry < new Date()) {
-      currentExpiry = new Date();
+      currentExpiry = new Date(); // Start extension from today if already expired
     }
+    const newExpiry = new Date(currentExpiry.getTime() + (days * 24 * 60 * 60 * 1000));
     
-    currentExpiry.setDate(currentExpiry.getDate() + parseInt(days));
+    const updateObj = { subscriptionExpiry: newExpiry };
+    if (rest.status === 'expired') updateObj.status = 'active';
     
-    rest.subscriptionExpiry = currentExpiry;
-    rest.status = 'active'; // automatically reactivate if extended
+    const updatedRest = await Restaurant.findByIdAndUpdate(req.params.id, { $set: updateObj }, { new: true });
+
+    await logAction('Extend Subscription', `Extended subscription of restaurant ${updatedRest.restaurantName} by ${days} days`);
+    res.json(updatedRest);
+  } catch (err) {
+    console.error('Error extending subscription:', err);
+    res.status(500).json({ message: err.message || 'Server Error' });
+  }
+};
+
+// @desc    Change Restaurant Password
+// @route   PUT /api/superadmin/restaurants/:id/password
+// @access  Private (Super Admin)
+const changePassword = async (req, res) => {
+  try {
+    const { password } = req.body;
+    if (!password || password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    const rest = await Restaurant.findById(req.params.id);
+    if (!rest) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    rest.password = await bcrypt.hash(password, salt);
     await rest.save();
 
-    await logAction('Extend Subscription', `Extended subscription of ${rest.restaurantName} by ${days} days`);
-    res.json(rest);
+    await logAction('Change Password', `Changed password for restaurant ${rest.restaurantName}`);
+    res.json({ message: 'Password updated successfully' });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
@@ -734,5 +760,6 @@ module.exports = {
   getNotifications,
   createNotification,
   getSettings,
-  saveSettings
+  saveSettings,
+  changePassword
 };

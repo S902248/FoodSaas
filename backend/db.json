@@ -166,8 +166,9 @@
       "resetOtpExpires": null,
       "_id": "06ea5dd1b8b52637bbb939ac",
       "id": "06ea5dd1b8b52637bbb939ac",
-      "updatedAt": "2026-06-03T10:40:28.843Z",
-      "name": "natkhat"
+      "updatedAt": "2026-06-06T11:35:51.087Z",
+      "name": "natkhat",
+      "tableLimit": 50
     },
     {
       "restaurantName": "Osteria Bella",
@@ -193,15 +194,16 @@
       "ownerName": "Karan Sharma",
       "phone": "+91 7654321098",
       "plan": "df97bf4ed5a5edcd3deb4db6",
-      "status": "suspended",
-      "subscriptionExpiry": "2026-05-31T10:40:28.843Z",
+      "status": "active",
+      "subscriptionExpiry": "2026-07-06T11:57:32.673Z",
       "createdAt": "2026-03-05T10:40:28.844Z",
       "resetOtp": null,
       "resetOtpExpires": null,
       "_id": "647a26f0728d259e7589dac5",
       "id": "647a26f0728d259e7589dac5",
-      "updatedAt": "2026-06-03T10:40:28.844Z",
-      "name": "Spice Route"
+      "updatedAt": "2026-06-06T11:57:32.674Z",
+      "name": "Spice Route",
+      "tableLimit": 50
     },
     {
       "restaurantName": "Sushi House",
@@ -210,32 +212,34 @@
       "ownerName": "Yuki Tanaka",
       "phone": "+91 6543210987",
       "plan": "108fb2180423a9f3fbf33a3b",
-      "status": "expired",
-      "subscriptionExpiry": "2026-05-24T10:40:28.843Z",
+      "status": "active",
+      "subscriptionExpiry": "2027-06-06T11:35:27.464Z",
       "createdAt": "2026-05-19T10:40:28.845Z",
       "resetOtp": null,
       "resetOtpExpires": null,
       "_id": "2b35373fce22a66c3d2b3e05",
       "id": "2b35373fce22a66c3d2b3e05",
-      "updatedAt": "2026-06-03T10:40:28.845Z",
-      "name": "Sushi House"
+      "updatedAt": "2026-06-06T11:35:27.465Z",
+      "name": "Sushi House",
+      "tableLimit": 50
     },
     {
       "restaurantName": "The Burger Club",
       "email": "burger@gmail.com",
-      "password": "$2b$10$w1chL2JqujVMkLJ9lG59aeEkendEZSIKBKofgQflrd4/1ST34ig3y",
+      "password": "$2b$10$/bhIDxRTLHIjmnLZlL8EF.j0XkXk2HSKi.GcgxDJnk6zCNJsnqzDa",
       "ownerName": "Sarah Jenkins",
       "phone": "+91 5432109876",
       "plan": "108fb2180423a9f3fbf33a3b",
       "status": "active",
-      "subscriptionExpiry": "2026-06-08T10:40:28.843Z",
+      "subscriptionExpiry": "2026-07-06T11:50:51.996Z",
       "createdAt": "2026-05-29T10:40:28.846Z",
       "resetOtp": null,
       "resetOtpExpires": null,
       "_id": "fe9750b1af36f9e1dbd2c818",
       "id": "fe9750b1af36f9e1dbd2c818",
-      "updatedAt": "2026-06-03T10:40:28.846Z",
-      "name": "The Burger Club"
+      "updatedAt": "2026-06-06T11:50:51.997Z",
+      "name": "The Burger Club",
+      "tableLimit": 50
     },
     {
       "restaurantName": "Test Notification Restaurant",
@@ -1270,6 +1274,60 @@
       "id": "3d31e8d22854b790e92a77aa",
       "createdAt": "2026-06-06T10:00:01.452Z",
       "updatedAt": "2026-06-06T10:00:01.452Z"
+    },
+    {
+      "action": "Change Status",
+      "details": "Set status of restaurant Spice Route to active",
+      "performedBy": "Super Admin",
+      "_id": "118ed204fdcf72a80988cc0d",
+      "id": "118ed204fdcf72a80988cc0d",
+      "createdAt": "2026-06-06T11:26:22.692Z",
+      "updatedAt": "2026-06-06T11:26:22.692Z"
+    },
+    {
+      "action": "Change Status",
+      "details": "Set status of restaurant Spice Route to active",
+      "performedBy": "Super Admin",
+      "_id": "845fda0db01a31736c141961",
+      "id": "845fda0db01a31736c141961",
+      "createdAt": "2026-06-06T11:35:07.119Z",
+      "updatedAt": "2026-06-06T11:35:07.119Z"
+    },
+    {
+      "action": "Extend Subscription",
+      "details": "Extended subscription of Sushi House by 365 days",
+      "performedBy": "Super Admin",
+      "_id": "83b3eb1da53b755cedb142a8",
+      "id": "83b3eb1da53b755cedb142a8",
+      "createdAt": "2026-06-06T11:35:27.466Z",
+      "updatedAt": "2026-06-06T11:35:27.466Z"
+    },
+    {
+      "action": "Extend Subscription",
+      "details": "Extended subscription of natkhat by 0 days",
+      "performedBy": "Super Admin",
+      "_id": "f8bab5dc54bd357850fe4fd2",
+      "id": "f8bab5dc54bd357850fe4fd2",
+      "createdAt": "2026-06-06T11:35:51.089Z",
+      "updatedAt": "2026-06-06T11:35:51.089Z"
+    },
+    {
+      "action": "Extend Subscription",
+      "details": "Extended subscription of The Burger Club by 30 days",
+      "performedBy": "Super Admin",
+      "_id": "dd4eceb7e84a20c1f5d2bb32",
+      "id": "dd4eceb7e84a20c1f5d2bb32",
+      "createdAt": "2026-06-06T11:50:51.999Z",
+      "updatedAt": "2026-06-06T11:50:51.999Z"
+    },
+    {
+      "action": "Extend Subscription",
+      "details": "Extended subscription of Spice Route by 30 days",
+      "performedBy": "Super Admin",
+      "_id": "42c9a23f77024ffd6dded47d",
+      "id": "42c9a23f77024ffd6dded47d",
+      "createdAt": "2026-06-06T11:57:32.675Z",
+      "updatedAt": "2026-06-06T11:57:32.675Z"
     }
   ],
   "Category": [
