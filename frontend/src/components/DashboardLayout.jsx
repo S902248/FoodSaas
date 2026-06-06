@@ -16,13 +16,14 @@ import {
   Calendar,
   Clock,
   ChevronRight,
-  Radio,
-  ChevronDown,
-  ChevronUp,
-  Users,
   CreditCard,
   BarChart,
-  Settings as SettingsIcon
+  Settings as SettingsIcon,
+  Menu,
+  Users,
+  Radio,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 const DashboardLayout = () => {
@@ -33,6 +34,12 @@ const DashboardLayout = () => {
   const [liveOrdersExpanded, setLiveOrdersExpanded] = useState(true);
   const [alerts, setAlerts] = useState([]);
   const [expandedGroups, setExpandedGroups] = useState({});
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -119,22 +126,19 @@ const DashboardLayout = () => {
         { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', tab: 'dashboard' },
         { to: '/dashboard/orders', icon: ClipboardList, label: 'Orders', tab: 'orders' },
         { to: '/dashboard/tables', icon: Grid2X2, label: 'Tables', tab: 'tables' },
+        { to: '/dashboard/menu', icon: UtensilsCrossed, label: 'Menu', tab: 'menu' },
       ]
     },
     {
       name: 'Management',
       items: [
-        { to: '/dashboard/menu', icon: UtensilsCrossed, label: 'Kitchen', tab: 'menu' }, 
-        { to: '/dashboard/qr-codes', icon: QrCode, label: 'QR Codes', tab: 'qrcodes' },
         { to: '/dashboard/customers', icon: Users, label: 'Customers', tab: 'customers' },
       ]
     },
     {
-      name: 'Settings & Reports',
+      name: 'Billing',
       items: [
-        { to: '/dashboard/billing', icon: CreditCard, label: 'Billing', tab: 'billing' },
-        { to: '/dashboard/reports', icon: BarChart, label: 'Reports', tab: 'reports' },
-        { to: '/dashboard/settings', icon: SettingsIcon, label: 'Settings', tab: 'settings' }
+        { to: '/dashboard/billing', icon: CreditCard, label: 'Billing', tab: 'billing' }
       ]
     }
   ];
@@ -170,9 +174,29 @@ const DashboardLayout = () => {
   }
 
   return (
-    <div className="min-h-screen flex bg-[#F8FAFC] font-sans overflow-hidden">
+    <div className="min-h-screen flex flex-col md:flex-row bg-[#F8FAFC] font-sans overflow-hidden">
+      {/* Mobile Top Bar */}
+      <div className="md:hidden flex items-center justify-between p-4 bg-[#111827] text-white shrink-0 z-30 shadow-md">
+        <div className="flex items-center gap-3">
+          <div className="p-1.5 bg-gradient-to-br from-[#6C4DFF] to-indigo-600 rounded-lg">
+            <ChefHat size={20} className="text-white" />
+          </div>
+          <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">BitsCon</span>
+        </div>
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-1 text-slate-300 hover:text-white transition-colors">
+          <Menu size={24} />
+        </button>
+      </div>
+
+      {/* Overlay for mobile */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={() => setIsMobileMenuOpen(false)}></div>
+      )}
+
       {/* Premium Sidebar */}
-      <aside className="w-64 bg-[#111827] text-slate-300 flex flex-col justify-between transition-all duration-300 shadow-2xl z-30 shrink-0">
+      <aside className={`fixed md:relative z-50 h-full w-64 bg-[#111827] text-slate-300 flex flex-col justify-between transition-transform duration-300 shadow-2xl shrink-0
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
         <div className="flex flex-col flex-1 min-h-0">
           {/* Logo & Notifications */}
           <div className="p-6 flex items-center justify-between text-white border-b border-slate-800/50 shrink-0">
@@ -180,7 +204,7 @@ const DashboardLayout = () => {
               <div className="p-2 bg-gradient-to-br from-[#6C4DFF] to-indigo-600 rounded-xl shadow-lg shadow-indigo-500/30">
                 <ChefHat size={24} className="text-white" />
               </div>
-              <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">FoodaaS</span>
+              <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">BitsCon</span>
             </div>
             
             {/* Notification Bell */}

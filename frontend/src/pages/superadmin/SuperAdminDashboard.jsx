@@ -65,6 +65,8 @@ const SuperAdminDashboard = () => {
   const [paymentForm, setPaymentForm] = useState({ restaurantId: '', amount: '', method: 'UPI', date: '' });
   const [settingsForm, setSettingsForm] = useState({ platformName: '', logoUrl: '', smtpHost: '', smtpPort: '', smtpUser: '', currency: 'INR', taxPercentage: '18' });
   const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const [notificationsList, setNotificationsList] = useState([]);
+  const [showNotifPanel, setShowNotifPanel] = useState(false);
   const [couponForm, setCouponForm] = useState({ code: '', discount: '', maxUses: '', expiryDate: '' });
   const [coupons, setCoupons] = useState([
     { id: '1', code: 'WELCOME50', discount: 50, maxUses: 100, used: 25, expiryDate: '2026-12-31', status: 'Active' },
@@ -114,11 +116,37 @@ const SuperAdminDashboard = () => {
 
   // Establish WebSocket Connection for Real-Time Notifications
   useEffect(() => {
-    const socket = io('http://localhost:5000');
+    const socket = io('http://localhost:5000', {
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 1000,
+    });
+
+    socket.on('connect', () => {
+      console.log('[Socket] Connected to server. ID:', socket.id);
+    });
+
+    socket.on('disconnect', (reason) => {
+      console.log('[Socket] Disconnected:', reason);
+    });
+
+    socket.on('connect_error', (err) => {
+      console.error('[Socket] Connection error:', err.message);
+    });
 
     socket.on('new_notification', (data) => {
+      console.log('[Socket] new_notification received:', data);
       showToast(data.message, 'success');
       setUnreadNotifications(prev => prev + 1);
+      setNotificationsList(prev => [{
+        id: Date.now(),
+        title: data.title || 'Notification',
+        message: data.message,
+        time: data.time ? new Date(data.time) : new Date(),
+        type: data.type || 'system',
+        read: false
+      }, ...prev].slice(0, 50)); // keep last 50
     });
 
     return () => {
@@ -359,7 +387,7 @@ const SuperAdminDashboard = () => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `foodaas_restaurants_${Date.now()}.csv`);
+    link.setAttribute("download", `bitscon_restaurants_${Date.now()}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -519,7 +547,7 @@ const SuperAdminDashboard = () => {
             <Utensils size={24} className="text-white" />
           </div>
           <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
-            FoodaaS
+            BitsCon
           </span>
         </div>
 
@@ -609,11 +637,16 @@ const SuperAdminDashboard = () => {
 
 
             <div className="relative">
-              <button 
-                onClick={() => setUnreadNotifications(0)}
+              <button
+                onClick={() => {
+                  setShowNotifPanel(prev => !prev);
+                  setUnreadNotifications(0);
+                  setNotificationsList(prev => prev.map(n => ({ ...n, read: true })));
+                }}
                 className={`p-2.5 rounded-xl border relative transition-all ${
-                darkMode ? 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
-              }`}>
+                  darkMode ? 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                }`}
+              >
                 <Bell size={20} />
                 {unreadNotifications > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center px-1 shadow-sm ring-2 ring-white">
@@ -621,6 +654,72 @@ const SuperAdminDashboard = () => {
                   </span>
                 )}
               </button>
+
+              {/* Notification Dropdown Panel */}
+              {showNotifPanel && (
+                <>
+                  {/* Backdrop to close on outside click */}
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowNotifPanel(false)}
+                  />
+                  <div className={`absolute right-0 top-12 w-80 z-50 rounded-2xl border shadow-2xl overflow-hidden ${
+                    darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
+                  }`}>
+                    {/* Header */}
+                    <div className={`flex items-center justify-between px-4 py-3 border-b ${
+                      darkMode ? 'border-slate-800' : 'border-slate-100'
+                    }`}>
+                      <div className="flex items-center gap-2">
+                        <Bell size={15} className="text-indigo-500" />
+                        <span className={`text-sm font-black ${textPrimary}`}>Notifications</span>
+                      </div>
+                      {notificationsList.length > 0 && (
+                        <button
+                          onClick={() => setNotificationsList([])}
+                          className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
+                        >
+                          Clear all
+                        </button>
+                      )}
+                    </div>
+
+                    {/* List */}
+                    <div className="max-h-80 overflow-y-auto">
+                      {notificationsList.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-10 gap-2">
+                          <Bell size={28} className="text-slate-300" />
+                          <p className={`text-xs font-semibold ${textSecondary}`}>No notifications yet</p>
+                        </div>
+                      ) : (
+                        notificationsList.map(n => (
+                          <div
+                            key={n.id}
+                            className={`px-4 py-3 border-b last:border-0 transition-colors ${
+                              darkMode ? 'border-slate-800 hover:bg-slate-800/50' : 'border-slate-50 hover:bg-slate-50'
+                            } ${!n.read ? (darkMode ? 'bg-indigo-500/5' : 'bg-indigo-50/60') : ''}`}
+                          >
+                            <div className="flex items-start gap-2.5">
+                              <div className={`mt-0.5 w-2 h-2 rounded-full shrink-0 ${
+                                n.type === 'system' ? 'bg-indigo-500' :
+                                n.type === 'expiry' ? 'bg-amber-500' :
+                                n.type === 'low_stock' ? 'bg-red-500' : 'bg-emerald-500'
+                              }`} />
+                              <div className="flex-1 min-w-0">
+                                <p className={`text-xs font-bold truncate ${textPrimary}`}>{n.title}</p>
+                                <p className={`text-[11px] mt-0.5 leading-snug ${textSecondary}`}>{n.message}</p>
+                                <p className="text-[10px] text-slate-400 mt-1">
+                                  {new Date(n.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} · {new Date(n.time).toLocaleDateString()}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             <div className={`h-8 w-px mx-2 ${darkMode ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
@@ -705,41 +804,37 @@ const SuperAdminDashboard = () => {
                     {/* Revenue Wave Chart */}
                     <div className={`p-5 rounded-2xl border ${bgCard}`}>
                       <h3 className={`text-sm font-black mb-4 tracking-tight ${textPrimary}`}>Revenue Analytics</h3>
-                      <div className="h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart data={stats.charts.monthlyRevenue}>
-                            <defs>
-                              <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.2}/>
-                                <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
-                              </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#1e293b" : "#f1f5f9"} />
-                            <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} />
-                            <YAxis stroke="#64748b" fontSize={10} tickLine={false} />
-                            <Tooltip contentStyle={{ backgroundColor: darkMode ? '#0f172a' : '#ffffff', borderColor: darkMode ? '#1e293b' : '#f1f5f9', color: darkMode ? '#f1f5f9' : '#0f172a' }} />
-                            <Area type="monotone" dataKey="Revenue" stroke="#4f46e5" strokeWidth={2} fillOpacity={1} fill="url(#colorRev)" />
-                          </AreaChart>
-                        </ResponsiveContainer>
-                      </div>
+                      <ResponsiveContainer width="100%" height={256}>
+                        <AreaChart data={stats.charts.monthlyRevenue}>
+                          <defs>
+                            <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.2}/>
+                              <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#1e293b" : "#f1f5f9"} />
+                          <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} />
+                          <YAxis stroke="#64748b" fontSize={10} tickLine={false} />
+                          <Tooltip contentStyle={{ backgroundColor: darkMode ? '#0f172a' : '#ffffff', borderColor: darkMode ? '#1e293b' : '#f1f5f9', color: darkMode ? '#f1f5f9' : '#0f172a' }} />
+                          <Area type="monotone" dataKey="Revenue" stroke="#4f46e5" strokeWidth={2} fillOpacity={1} fill="url(#colorRev)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
                     </div>
 
                     {/* Subscription Growth Chart */}
                     <div className={`p-5 rounded-2xl border ${bgCard}`}>
                       <h3 className={`text-sm font-black mb-4 tracking-tight ${textPrimary}`}>Subscription Growth Curve</h3>
-                      <div className="h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={stats.charts.subscriptionGrowth}>
-                            <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#1e293b" : "#f1f5f9"} />
-                            <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} />
-                            <YAxis stroke="#64748b" fontSize={10} tickLine={false} />
-                            <Tooltip contentStyle={{ backgroundColor: darkMode ? '#0f172a' : '#ffffff', borderColor: darkMode ? '#1e293b' : '#f1f5f9', color: darkMode ? '#f1f5f9' : '#0f172a' }} />
-                            <Legend wrapperStyle={{ fontSize: 10 }} />
-                            <Bar dataKey="Active" fill="#10b981" radius={[4, 4, 0, 0]} />
-                            <Bar dataKey="Expired" fill="#f43f5e" radius={[4, 4, 0, 0]} />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
+                      <ResponsiveContainer width="100%" height={256}>
+                        <BarChart data={stats.charts.subscriptionGrowth}>
+                          <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#1e293b" : "#f1f5f9"} />
+                          <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} />
+                          <YAxis stroke="#64748b" fontSize={10} tickLine={false} />
+                          <Tooltip contentStyle={{ backgroundColor: darkMode ? '#0f172a' : '#ffffff', borderColor: darkMode ? '#1e293b' : '#f1f5f9', color: darkMode ? '#f1f5f9' : '#0f172a' }} />
+                          <Legend wrapperStyle={{ fontSize: 10 }} />
+                          <Bar dataKey="Active" fill="#10b981" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="Expired" fill="#f43f5e" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
                     </div>
                   </div>
 
@@ -1482,7 +1577,7 @@ const SuperAdminDashboard = () => {
                         <tbody className="divide-y divide-slate-800/50">
                           <tr className={`hover:bg-slate-850/20 transition-colors ${darkMode ? 'hover:bg-slate-900/20' : 'hover:bg-slate-50/50'}`}>
                             <td className="p-4 font-bold text-slate-200">Global Administrator</td>
-                            <td className="p-4 font-semibold text-slate-400">admin@foodaas.com</td>
+                            <td className="p-4 font-semibold text-slate-400">admin@bitscon.com</td>
                             <td className="p-4">
                               <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-violet-500/10 text-violet-400 border border-violet-500/20">
                                 SUPER_ADMIN
@@ -1925,7 +2020,7 @@ const SuperAdminDashboard = () => {
         <footer className={`h-12 border-t flex items-center justify-center text-[10px] font-bold uppercase tracking-widest ${
           darkMode ? 'bg-slate-950/60 border-slate-900 text-slate-600' : 'bg-white border-slate-100 text-slate-400'
         }`}>
-          &copy; {new Date().getFullYear()} {systemSettings?.platformName || 'FoodaaS'} &bull; SUPER_ADMIN DASHBOARD CONSOLE
+          &copy; {new Date().getFullYear()} {systemSettings?.platformName || 'BitsCon'} &bull; SUPER_ADMIN DASHBOARD CONSOLE
         </footer>
       </main>
 

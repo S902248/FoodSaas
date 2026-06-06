@@ -30,7 +30,7 @@ const Login = () => {
       >
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative z-10 p-12 flex flex-col justify-end h-full">
-          <p className="text-white text-lg font-medium opacity-90">"FoodaaS has completely transformed how we manage orders and tables. The QR system is flawless."</p>
+          <p className="text-white text-lg font-medium opacity-90">"BitsCon has completely transformed how we manage orders and tables. The QR system is flawless."</p>
           <div className="mt-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-bold">SV</div>
             <div className="text-white">
@@ -53,7 +53,7 @@ const Login = () => {
             <div className="w-16 h-16 bg-white/10 rounded-2xl backdrop-blur-md border border-white/20 flex items-center justify-center mb-4 shadow-inner">
               <ChefHat size={32} className="text-white" />
             </div>
-            <h1 className="text-2xl font-bold tracking-wide">FoodaaS</h1>
+            <h1 className="text-2xl font-bold tracking-wide">BitsCon</h1>
           </div>
           
           <h2 className="text-3xl font-bold mb-2 text-center">Welcome back!</h2>
@@ -128,7 +128,7 @@ const Login = () => {
         
         {/* Footer links */}
         <div className="absolute bottom-6 flex gap-6 text-white/50 text-xs z-10">
-          <span>© 2026 FoodaaS. All rights reserved.</span>
+          <span>© 2026 BitsCon. All rights reserved.</span>
           <a href="#" className="hover:text-white transition-colors">Terms</a>
           <a href="#" className="hover:text-white transition-colors">Privacy</a>
         </div>

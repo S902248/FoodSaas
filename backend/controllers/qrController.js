@@ -210,3 +210,21 @@ exports.incrementOrderCount = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+// Toggle Reserve Status
+exports.toggleReserveStatus = async (req, res) => {
+  try {
+    const qrcode = await QRCode.findOne({ _id: req.params.id, restaurant: req.restaurant.id });
+    if (!qrcode) {
+      return res.status(404).json({ message: 'Table/QR Code not found' });
+    }
+
+    qrcode.isReserved = !qrcode.isReserved;
+    await qrcode.save();
+
+    res.json({ message: `Table ${qrcode.isReserved ? 'reserved' : 'unreserved'} successfully`, qrcode });
+  } catch (error) {
+    console.error('Error toggling reserve status:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};

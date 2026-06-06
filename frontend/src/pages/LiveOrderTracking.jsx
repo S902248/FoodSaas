@@ -5,19 +5,19 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import {
-  ChefHat, QrCode,
+  ChefHat, QrCode, ClipboardList,
   RefreshCw, Download, Radio, Bell, TrendingUp, Users,
   Clock, CheckCircle, Zap, Eye, Printer, Send, MoreVertical, Activity
 } from 'lucide-react';
 
 const STATUS_COLORS = {
-  'New Order':  { bg: 'bg-blue-500/15',   text: 'text-blue-400',   dot: 'bg-blue-400',   pulse: true  },
-  'Accepted':   { bg: 'bg-indigo-500/15', text: 'text-indigo-400', dot: 'bg-indigo-400', pulse: false },
-  'Preparing':  { bg: 'bg-amber-500/15',  text: 'text-amber-400',  dot: 'bg-amber-400',  pulse: true  },
-  'Ready':      { bg: 'bg-emerald-500/15',text: 'text-emerald-400',dot: 'bg-emerald-400',pulse: true  },
-  'Served':     { bg: 'bg-teal-500/15',   text: 'text-teal-400',   dot: 'bg-teal-400',  pulse: false },
-  'Completed':  { bg: 'bg-slate-500/15',  text: 'text-slate-400',  dot: 'bg-slate-400', pulse: false },
-  'Cancelled':  { bg: 'bg-red-500/15',    text: 'text-red-400',    dot: 'bg-red-400',   pulse: false },
+  'New Order':  { bg: 'bg-blue-50',   text: 'text-blue-600',   dot: 'bg-blue-500',   pulse: true  },
+  'Accepted':   { bg: 'bg-indigo-50', text: 'text-indigo-600', dot: 'bg-indigo-500', pulse: false },
+  'Preparing':  { bg: 'bg-amber-50',  text: 'text-amber-600',  dot: 'bg-amber-500',  pulse: true  },
+  'Ready':      { bg: 'bg-emerald-50',text: 'text-emerald-600',dot: 'bg-emerald-500',pulse: true  },
+  'Served':     { bg: 'bg-teal-50',   text: 'text-teal-600',   dot: 'bg-teal-500',  pulse: false },
+  'Completed':  { bg: 'bg-slate-100',  text: 'text-slate-600',  dot: 'bg-slate-500', pulse: false },
+  'Cancelled':  { bg: 'bg-red-50',    text: 'text-red-600',    dot: 'bg-red-500',   pulse: false },
 };
 
 export default function LiveOrderTracking() {
@@ -26,7 +26,7 @@ export default function LiveOrderTracking() {
   const [orders, setOrders] = useState([]);
   const [activity, setActivity] = useState([]);
   const [stats, setStats] = useState([
-    { label:'Total QR Orders', value:'0', icon:QrCode,       change:'Live', up:true,  color:'from-violet-600 to-indigo-600' },
+    { label:'Total Orders', value:'0', icon:ClipboardList,       change:'Live', up:true,  color:'from-violet-600 to-indigo-600' },
     { label:'Active Tables',   value:'0',  icon:Users,        change:'Live',   up:true,  color:'from-blue-600 to-cyan-600'    },
     { label:'In Kitchen',      value:'0',  icon:ChefHat,      change:'Live', up:null,  color:'from-amber-500 to-orange-500' },
     { label:'Completed',       value:'0', icon:CheckCircle,  change:'Live',  up:true,  color:'from-emerald-500 to-teal-500' },
@@ -38,7 +38,6 @@ export default function LiveOrderTracking() {
     {t:'8pm',orders:0},{t:'9pm',orders:0},{t:'10pm',orders:0}
   ]);
   const [topTables, setTopTables] = useState([]);
-  const [ticker, setTicker] = useState(0);
   const [toast, setToast] = useState(null);
   const [filter, setFilter] = useState('All');
 
@@ -74,8 +73,8 @@ export default function LiveOrderTracking() {
       const completedCount = res.data.filter(o => ['Served', 'Completed'].includes(o.status)).length;
 
       setStats([
-        { label:'Total QR Orders', value: String(totalOrders), icon: QrCode,       change:'Live', up:true,  color:'from-violet-600 to-indigo-600' },
-        { label:'Active Tables',   value: String(activeTablesCount),  icon: Users,        change:'Live',   up:true,  color:'from-blue-600 to-cyan-600'    },
+        { label:'Total Orders', value: String(totalOrders), icon: ClipboardList,       change:'Live', up:true,  color:'from-[#6C4DFF] to-indigo-600' },
+        { label:'Active Tables',   value: String(activeTablesCount),  icon: Users,        change:'Live',   up:true,  color:'from-blue-500 to-cyan-500'    },
         { label:'In Kitchen',      value: String(inKitchenCount),  icon: ChefHat,      change:'Live', up:null,  color:'from-amber-500 to-orange-500' },
         { label:'Completed',       value: String(completedCount), icon: CheckCircle,  change:'Live',  up:true,  color:'from-emerald-500 to-teal-500' },
         { label:'Avg Prep Time',   value: totalOrders > 0 ? '12m' : '0m', icon: Clock,        change:'Live',  up:true,  color:'from-pink-500 to-rose-500'   },
@@ -121,16 +120,16 @@ export default function LiveOrderTracking() {
           icon: '📲',
           text: `${o.tableName} placed order ${o.orderId}`,
           time: orderTime,
-          color: 'text-blue-400',
+          color: 'text-blue-500',
           timestamp: new Date(o.createdAt).getTime()
         });
         if (o.status !== 'New Order') {
           let icon = '🔄';
-          let color = 'text-violet-400';
-          if (o.status === 'Preparing') { icon = '🔥'; color = 'text-amber-400'; }
-          else if (o.status === 'Ready') { icon = '🛎️'; color = 'text-emerald-400'; }
-          else if (o.status === 'Served' || o.status === 'Completed') { icon = '🚀'; color = 'text-teal-400'; }
-          else if (o.status === 'Cancelled') { icon = '❌'; color = 'text-red-400'; }
+          let color = 'text-indigo-500';
+          if (o.status === 'Preparing') { icon = '🔥'; color = 'text-amber-500'; }
+          else if (o.status === 'Ready') { icon = '🛎️'; color = 'text-emerald-500'; }
+          else if (o.status === 'Served' || o.status === 'Completed') { icon = '🚀'; color = 'text-teal-500'; }
+          else if (o.status === 'Cancelled') { icon = '❌'; color = 'text-red-500'; }
           
           newActivity.push({
             icon,
@@ -176,28 +175,28 @@ export default function LiveOrderTracking() {
   const filteredOrders = filter === 'All' ? orders : orders.filter(o => o.status === filter);
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-[#0F172A]">
+    <div className="flex-1 flex flex-col overflow-hidden bg-[#f8f9fa]">
 
       {/* Header */}
-      <header className="h-20 bg-[#0B1120]/80 border-b border-slate-800/60 flex items-center justify-between px-8 backdrop-blur-md shrink-0">
+      <header className="py-5 px-6 md:h-20 bg-white/80 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 backdrop-blur-md shrink-0">
         <div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-lg shadow-emerald-400/50" />
-              <span className="text-xs text-emerald-400 font-bold uppercase tracking-wider">Live</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-lg shadow-emerald-500/50" />
+              <span className="text-xs text-emerald-600 font-bold uppercase tracking-wider">Live</span>
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Live QR Order Tracking</h1>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Live Order Tracking</h1>
           </div>
-          <p className="text-xs text-slate-500 font-medium mt-0.5">Monitor all customer orders placed via table QR codes in real time</p>
+          <p className="text-xs text-slate-500 font-medium mt-0.5">Monitor all customer orders in real time</p>
         </div>
-        <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-violet-600/20 border border-violet-500/30 text-violet-300 rounded-xl text-sm font-semibold hover:bg-violet-600/30 transition-all">
+        <div className="flex flex-wrap gap-3">
+          <button className="flex items-center justify-center flex-1 md:flex-none gap-2 px-4 py-2 bg-indigo-50 text-[#6C4DFF] border border-indigo-100 rounded-xl text-sm font-semibold hover:bg-indigo-100 transition-all">
             <Radio size={14} className="animate-pulse" />Live Orders
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-slate-800/60 border border-slate-700/50 text-slate-300 rounded-xl text-sm font-semibold hover:bg-slate-700/60 transition-all">
+          <button className="flex items-center justify-center flex-1 md:flex-none gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-xl text-sm font-semibold hover:bg-slate-50 transition-all shadow-sm">
             <Download size={14} />Export
           </button>
-          <button onClick={() => showToast('Data refreshed!')} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40 transition-all">
+          <button onClick={() => showToast('Data refreshed!')} className="flex items-center justify-center flex-1 md:flex-none gap-2 px-4 py-2 bg-[#6C4DFF] text-white rounded-xl text-sm font-bold shadow-md hover:bg-indigo-600 transition-all">
             <RefreshCw size={14} />Refresh
           </button>
         </div>
@@ -206,17 +205,17 @@ export default function LiveOrderTracking() {
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
 
         {/* Stats */}
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {stats.map((s, i) => (
             <motion.div key={s.label} initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay: i*0.07 }}
-              className="relative bg-[#131C2E] border border-slate-800/60 rounded-2xl p-5 overflow-hidden group hover:border-slate-700 transition-all duration-300 cursor-default">
+              className="relative bg-white border border-slate-200 shadow-sm rounded-2xl p-5 overflow-hidden group hover:border-indigo-200 transition-all duration-300 cursor-default hover:shadow-md">
               <div className={`absolute inset-0 bg-gradient-to-br ${s.color} opacity-0 group-hover:opacity-5 transition-opacity rounded-2xl`} />
-              <div className={`inline-flex p-2.5 rounded-xl bg-gradient-to-br ${s.color} mb-3 shadow-lg`}>
+              <div className={`inline-flex p-2.5 rounded-xl bg-gradient-to-br ${s.color} mb-3 shadow-sm`}>
                 <s.icon size={18} className="text-white" />
               </div>
-              <div className="text-3xl font-black text-white mb-1">{s.value}</div>
+              <div className="text-3xl font-black text-slate-900 mb-1">{s.value}</div>
               <div className="text-xs text-slate-500 font-semibold mb-2">{s.label}</div>
-              <div className={`text-xs font-bold ${s.up === null ? 'text-blue-400' : s.up ? 'text-emerald-400' : 'text-red-400'}`}>
+              <div className={`text-xs font-bold ${s.up === null ? 'text-blue-500' : s.up ? 'text-emerald-500' : 'text-red-500'}`}>
                 {s.up === true ? '↑' : s.up === false ? '↓' : '●'} {s.change}
               </div>
             </motion.div>
@@ -224,14 +223,14 @@ export default function LiveOrderTracking() {
         </div>
 
         {/* Chart + Top Tables */}
-        <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-2 bg-[#131C2E] border border-slate-800/60 rounded-2xl p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="col-span-1 lg:col-span-2 bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
             <div className="flex items-center justify-between mb-5">
               <div>
-                <h3 className="text-white font-bold">QR Orders Per Hour</h3>
+                <h3 className="text-slate-900 font-bold">Orders Per Hour</h3>
                 <p className="text-slate-500 text-xs">Today's order volume trend</p>
               </div>
-              <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold">
+              <div className="flex items-center gap-2 text-emerald-600 text-xs font-bold bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
                 <TrendingUp size={14} />+28% vs yesterday
               </div>
             </div>
@@ -239,30 +238,30 @@ export default function LiveOrderTracking() {
               <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="ordGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#7C3AED" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#7C3AED" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#6C4DFF" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#6C4DFF" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="t" tick={{ fill:'#475569', fontSize:11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill:'#475569', fontSize:11 }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ background:'#1E293B', border:'1px solid #334155', borderRadius:8, color:'#fff', fontSize:12 }} />
-                <Area type="monotone" dataKey="orders" stroke="#7C3AED" strokeWidth={2.5} fill="url(#ordGrad)" dot={false} />
+                <XAxis dataKey="t" tick={{ fill:'#64748b', fontSize:11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill:'#64748b', fontSize:11 }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ background:'#fff', border:'1px solid #e2e8f0', borderRadius:8, color:'#0f172a', fontSize:12, boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                <Area type="monotone" dataKey="orders" stroke="#6C4DFF" strokeWidth={2.5} fill="url(#ordGrad)" dot={false} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
-          <div className="bg-[#131C2E] border border-slate-800/60 rounded-2xl p-6">
-            <h3 className="text-white font-bold mb-1">Most Active Tables</h3>
-            <p className="text-slate-500 text-xs mb-5">By QR scan orders today</p>
+          <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
+            <h3 className="text-slate-900 font-bold mb-1">Most Active Tables</h3>
+            <p className="text-slate-500 text-xs mb-5">By orders today</p>
             <div className="space-y-4">
               {topTables.map((t, i) => (
                 <div key={t.table}>
                   <div className="flex justify-between text-xs font-semibold mb-1.5">
-                    <span className="text-slate-300">{t.table}</span>
-                    <span className="text-violet-400">{t.orders} orders</span>
+                    <span className="text-slate-700">{t.table}</span>
+                    <span className="text-indigo-600">{t.orders} orders</span>
                   </div>
-                  <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                     <motion.div initial={{ width:0 }} animate={{ width:`${t.pct}%` }} transition={{ delay: i*0.1+0.3, duration:0.6 }}
-                      className="h-full bg-gradient-to-r from-violet-600 to-indigo-500 rounded-full" />
+                      className="h-full bg-gradient-to-r from-indigo-500 to-[#6C4DFF] rounded-full" />
                   </div>
                 </div>
               ))}
@@ -271,19 +270,19 @@ export default function LiveOrderTracking() {
         </div>
 
         {/* Main Table + Activity Feed */}
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* Orders Table */}
-          <div className="col-span-2 bg-[#131C2E] border border-slate-800/60 rounded-2xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-800/60 flex items-center justify-between">
+          <div className="col-span-1 lg:col-span-2 bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50">
               <div className="flex items-center gap-3">
-                <h3 className="text-white font-bold">Live Orders</h3>
-                <span className="px-2 py-0.5 bg-violet-600/20 border border-violet-500/30 text-violet-300 text-xs font-bold rounded-full">{orders.length} total</span>
+                <h3 className="text-slate-900 font-bold">Live Orders</h3>
+                <span className="px-2 py-0.5 bg-indigo-50 border border-indigo-100 text-indigo-600 text-xs font-bold rounded-full">{orders.length} total</span>
               </div>
               <div className="flex gap-1.5 flex-wrap">
                 {STATUSES.map(s => (
                   <button key={s} onClick={() => setFilter(s)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${filter===s ? 'bg-violet-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${filter===s ? 'bg-[#6C4DFF] text-white shadow-md' : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'}`}>
                     {s}
                   </button>
                 ))}
@@ -292,7 +291,7 @@ export default function LiveOrderTracking() {
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="border-b border-slate-800/60 text-slate-500 text-xs uppercase tracking-wider">
+                  <tr className="border-b border-slate-100 text-slate-500 text-xs uppercase tracking-wider bg-slate-50/50">
                     {['Order','Table','Items','Time','Payment','Status','ETA','Amount','Actions'].map(h => (
                       <th key={h} className="px-4 py-3 font-semibold whitespace-nowrap">{h}</th>
                     ))}
@@ -304,30 +303,29 @@ export default function LiveOrderTracking() {
                       const sc = STATUS_COLORS[order.status];
                       return (
                         <motion.tr key={order.id} initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }} transition={{ delay: i*0.04 }}
-                          className="border-b border-slate-800/40 hover:bg-slate-800/30 transition-colors">
-                          <td className="px-4 py-3 text-violet-400 font-bold text-sm whitespace-nowrap">{order.orderId}</td>
-                          <td className="px-4 py-3 text-white font-semibold text-sm whitespace-nowrap">{order.table}</td>
-                          <td className="px-4 py-3 text-slate-400 text-xs max-w-[160px] truncate">{order.items}</td>
-                          <td className="px-4 py-3 text-slate-400 text-xs whitespace-nowrap">{order.time}</td>
+                          className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+                          <td className="px-4 py-3 text-indigo-600 font-bold text-sm whitespace-nowrap">{order.orderId}</td>
+                          <td className="px-4 py-3 text-slate-900 font-semibold text-sm whitespace-nowrap">{order.table}</td>
+                          <td className="px-4 py-3 text-slate-600 text-xs max-w-[160px] truncate">{order.items}</td>
+                          <td className="px-4 py-3 text-slate-500 text-xs whitespace-nowrap">{order.time}</td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${order.payment==='Paid' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'}`}>
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${order.payment==='Paid' ? 'bg-emerald-50 border border-emerald-100 text-emerald-600' : 'bg-amber-50 border border-amber-100 text-amber-600'}`}>
                               {order.payment}
                             </span>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full w-fit ${sc.bg}`}>
+                            <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full border w-fit ${sc.bg} border-[color:currentColor] border-opacity-20`}>
                               <span className={`w-1.5 h-1.5 rounded-full ${sc.dot} ${sc.pulse ? 'animate-pulse' : ''}`} />
-                              <span className={`text-xs font-bold ${sc.text}`}>{order.status}</span>
+                              <span className={`text-[10px] font-bold ${sc.text}`}>{order.status}</span>
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-slate-400 text-xs font-semibold whitespace-nowrap">{order.eta}</td>
-                          <td className="px-4 py-3 text-white font-bold text-sm whitespace-nowrap">{order.amount}</td>
+                          <td className="px-4 py-3 text-slate-500 text-xs font-semibold whitespace-nowrap">{order.eta}</td>
+                          <td className="px-4 py-3 text-slate-900 font-bold text-sm whitespace-nowrap">{order.amount}</td>
                           <td className="px-4 py-3 whitespace-nowrap">
                             <div className="flex gap-1">
-                              <button onClick={() => updateStatus(order.id, 'Preparing')} title="Mark Preparing" className="p-1.5 text-slate-500 hover:text-amber-400 hover:bg-amber-400/10 rounded-lg transition-colors"><Zap size={13}/></button>
-                              <button onClick={() => updateStatus(order.id, 'Ready')} title="Mark Ready" className="p-1.5 text-slate-500 hover:text-emerald-400 hover:bg-emerald-400/10 rounded-lg transition-colors"><CheckCircle size={13}/></button>
-                              <button title="Print Bill" className="p-1.5 text-slate-500 hover:text-blue-400 hover:bg-blue-400/10 rounded-lg transition-colors"><Printer size={13}/></button>
-                              <button title="Notify" className="p-1.5 text-slate-500 hover:text-violet-400 hover:bg-violet-400/10 rounded-lg transition-colors"><Send size={13}/></button>
+                              <button onClick={() => updateStatus(order.id, 'Preparing')} title="Mark Preparing" className="p-1.5 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-colors"><Zap size={14}/></button>
+                              <button onClick={() => updateStatus(order.id, 'Ready')} title="Mark Ready" className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors"><CheckCircle size={14}/></button>
+                              <button title="Print Bill" className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"><Printer size={14}/></button>
                             </div>
                           </td>
                         </motion.tr>
@@ -337,36 +335,45 @@ export default function LiveOrderTracking() {
                 </tbody>
               </table>
               {filteredOrders.length === 0 && (
-                <div className="py-12 text-center text-slate-600 font-semibold">No orders for this status</div>
+                <div className="py-12 text-center text-slate-400 font-semibold">No orders for this status</div>
               )}
             </div>
           </div>
 
           {/* Activity Feed */}
-          <div className="bg-[#131C2E] border border-slate-800/60 rounded-2xl overflow-hidden flex flex-col">
-            <div className="px-5 py-4 border-b border-slate-800/60 flex items-center justify-between">
+          <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden flex flex-col">
+            <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
               <div className="flex items-center gap-2">
-                <Activity size={16} className="text-violet-400" />
-                <h3 className="text-white font-bold">Live Activity</h3>
+                <Activity size={16} className="text-[#6C4DFF]" />
+                <h3 className="text-slate-900 font-bold">Live Activity</h3>
               </div>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
             <div className="flex-1 p-4 space-y-2 overflow-y-auto max-h-[480px]">
               <AnimatePresence>
-                {activity.map((a, i) => (
-                  <motion.div key={i} initial={{ opacity:0, x:20 }} animate={{ opacity:1, x:0 }} transition={{ delay: i*0.04 }}
-                    className="flex items-start gap-3 p-3 bg-slate-800/30 rounded-xl border border-slate-800/40 hover:border-slate-700/60 transition-colors">
-                    <span className="text-base">{a.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-xs font-semibold ${a.color} leading-snug`}>{a.text}</p>
-                      <p className="text-xs text-slate-600 mt-0.5">{a.time}</p>
-                    </div>
-                  </motion.div>
-                ))}
+                {activity.map((a, i) => {
+                  let colorClass = 'text-slate-700';
+                  if (a.color.includes('emerald')) colorClass = 'text-emerald-700';
+                  if (a.color.includes('amber')) colorClass = 'text-amber-700';
+                  if (a.color.includes('red')) colorClass = 'text-red-700';
+                  if (a.color.includes('blue')) colorClass = 'text-blue-700';
+                  if (a.color.includes('violet')) colorClass = 'text-indigo-700';
+
+                  return (
+                    <motion.div key={i} initial={{ opacity:0, x:20 }} animate={{ opacity:1, x:0 }} transition={{ delay: i*0.04 }}
+                      className="flex items-start gap-3 p-3 bg-white rounded-xl border border-slate-100 hover:border-slate-200 shadow-sm hover:shadow transition-all">
+                      <span className="text-base">{a.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-xs font-semibold ${colorClass} leading-snug`}>{a.text}</p>
+                        <p className="text-[10px] font-medium text-slate-400 mt-1">{a.time}</p>
+                      </div>
+                    </motion.div>
+                  )
+                })}
               </AnimatePresence>
             </div>
-            <div className="px-4 pb-4">
-              <button className="w-full py-2.5 bg-violet-600/10 border border-violet-500/20 text-violet-400 rounded-xl text-xs font-bold hover:bg-violet-600/20 transition-all">
+            <div className="px-4 pb-4 bg-slate-50/50 pt-4 border-t border-slate-100">
+              <button className="w-full py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl text-xs font-bold hover:bg-slate-50 hover:text-slate-900 shadow-sm transition-all">
                 View Full Activity Log
               </button>
             </div>
@@ -374,21 +381,20 @@ export default function LiveOrderTracking() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-[#131C2E] border border-slate-800/60 rounded-2xl p-5">
-          <h3 className="text-white font-bold mb-4 text-sm">Quick Actions</h3>
+        <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-5">
+          <h3 className="text-slate-900 font-bold mb-4 text-sm">Quick Actions</h3>
           <div className="flex flex-wrap gap-3">
             {[
               { label:'Assign Waiter', icon:Users, color:'from-blue-600 to-cyan-600' },
               { label:'Print All Bills', icon:Printer, color:'from-slate-600 to-slate-500' },
               { label:'Mark All Ready', icon:CheckCircle, color:'from-emerald-600 to-teal-600' },
               { label:'Send Notifications', icon:Bell, color:'from-amber-500 to-orange-500' },
-              { label:'View Analytics', icon:TrendingUp, color:'from-violet-600 to-indigo-600' },
-              { label:'Generate QR Again', icon:QrCode, color:'from-pink-600 to-rose-600' },
+              { label:'View Analytics', icon:TrendingUp, color:'from-[#6C4DFF] to-indigo-600' },
             ].map(a => (
               <button key={a.label} onClick={() => showToast(`${a.label} triggered`)}
-                className="flex items-center gap-2 px-4 py-2.5 bg-slate-800/50 border border-slate-700/50 text-slate-300 rounded-xl text-sm font-semibold hover:border-slate-600 hover:bg-slate-800 transition-all group">
-                <div className={`p-1 rounded-lg bg-gradient-to-br ${a.color}`}>
-                  <a.icon size={12} className="text-white" />
+                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-sm font-semibold hover:border-indigo-200 hover:shadow-md transition-all group">
+                <div className={`p-1.5 rounded-lg bg-gradient-to-br ${a.color} shadow-sm`}>
+                  <a.icon size={14} className="text-white" />
                 </div>
                 {a.label}
               </button>
@@ -401,8 +407,8 @@ export default function LiveOrderTracking() {
       <AnimatePresence>
         {toast && (
           <motion.div initial={{ opacity:0, y:60 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:60 }}
-            className="fixed bottom-6 right-6 bg-slate-900 border border-violet-500/40 text-white px-5 py-3 rounded-2xl shadow-2xl shadow-indigo-500/20 flex items-center gap-3 z-50 text-sm font-semibold">
-            <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
+            className="fixed bottom-6 right-6 bg-white border border-slate-200 text-slate-800 px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 z-50 text-sm font-bold">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#6C4DFF] animate-pulse" />
             {toast}
           </motion.div>
         )}

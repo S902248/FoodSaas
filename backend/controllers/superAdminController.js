@@ -30,7 +30,9 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const admin = await SuperAdmin.findOne({ email });
+    // Normalize email to lowercase to match schema
+    const normalizedEmail = (email || '').toLowerCase().trim();
+    const admin = await SuperAdmin.findOne({ email: normalizedEmail });
     if (!admin) {
       return res.status(400).json({ message: 'Invalid Credentials' });
     }
@@ -51,13 +53,12 @@ const login = async (req, res) => {
       payload,
       jwtSecret,
       { expiresIn: '5 days' },
-      (err, token) => {
+      async (err, token) => {
         if (err) throw err;
+        await logAction('Login', `Super Admin ${admin.email} logged in successfully`);
         res.json({ token, admin: { id: admin.id, name: admin.name, email: admin.email } });
       }
     );
-
-    await logAction('Login', `Super Admin ${admin.email} logged in successfully`);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -295,6 +296,22 @@ const createRestaurant = async (req, res) => {
 
     await restaurant.save();
     await logAction('Create Restaurant', `Created restaurant ${restaurantName} (Owner: ${ownerName})`);
+
+    // Fire real-time notification to superadmin dashboard
+    try {
+      const { publishNotification } = require('../utils/redisClient');
+      const notifMsg = `New restaurant created: ${restaurantName} (${email})`;
+      await publishNotification({
+        title: 'New Restaurant Added',
+        message: notifMsg,
+        time: new Date(),
+        type: 'system'
+      });
+      console.log('[Notification] Published for new restaurant:', restaurantName);
+    } catch (pubErr) {
+      console.error('[Notification] Failed to publish:', pubErr.message);
+    }
+
     res.status(201).json(restaurant);
   } catch (err) {
     console.error(err);
@@ -345,12 +362,14 @@ const deleteRestaurant = async (req, res) => {
       return res.status(404).json({ message: 'Restaurant not found' });
     }
 
-    await Restaurant.findByIdAndDelete(req.params.id);
-    // Cleanup branches, QRs, orders, food
+    const restId = req.params.id;
+    await Restaurant.findByIdAndDelete(restId);
+
+    // Cleanup ALL associated branches, QRs, and orders (deleteMany, not findOneAndDelete)
     await Promise.all([
-      Branch.findOneAndDelete({ restaurant: req.params.id }),
-      QRCode.findOneAndDelete({ restaurant: req.params.id }),
-      Order.findOneAndDelete({ restaurant: req.params.id })
+      Branch.deleteMany({ restaurant: restId }),
+      QRCode.deleteMany({ restaurant: restId }),
+      Order.deleteMany({ restaurant: restId })
     ]);
 
     await logAction('Delete Restaurant', `Deleted restaurant ${rest.restaurantName} and all associated records`);

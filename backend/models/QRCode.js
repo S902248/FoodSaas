@@ -19,6 +19,10 @@ const qrCodeSchema = new mongoose.Schema({
     enum: ['active', 'inactive'],
     default: 'active'
   },
+  isReserved: {
+    type: Boolean,
+    default: false
+  },
   url: {
     type: String,
     required: true
