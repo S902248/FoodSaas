@@ -22,6 +22,7 @@ import {
 const Dashboard = () => {
   const { restaurant, loading } = useContext(AuthContext);
   const [liveOrders, setLiveOrders] = useState([]);
+  const [showExpiredWarning, setShowExpiredWarning] = useState(false);
   const [tables, setTables] = useState([]);
   const [kitchenStats, setKitchenStats] = useState({ preparing: 0, ready: 0, served: 0 });
   const [stats, setStats] = useState([
@@ -163,7 +164,19 @@ const Dashboard = () => {
     if (!loading && restaurant) {
       fetchDashboardData();
       const interval = setInterval(fetchDashboardData, 5000);
-      return () => clearInterval(interval);
+      
+      let warnInterval;
+      if (restaurant.status === 'expired' || (restaurant.subscriptionExpiry && new Date(restaurant.subscriptionExpiry) < new Date())) {
+        warnInterval = setInterval(() => {
+          setShowExpiredWarning(true);
+        }, 60000); // every minute
+        setShowExpiredWarning(true); // Show immediately on load too
+      }
+      
+      return () => {
+        clearInterval(interval);
+        if (warnInterval) clearInterval(warnInterval);
+      };
     }
   }, [loading, restaurant]);
 
@@ -189,7 +202,29 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="bg-[#f8f9fa] min-h-screen text-slate-800 font-sans">
+    <div className="bg-[#f8f9fa] min-h-screen text-slate-800 font-sans relative">
+      
+      {/* Expiration Warning Modal */}
+      {showExpiredWarning && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full border border-red-100 text-center animate-in fade-in zoom-in duration-300">
+            <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertTriangle size={40} className="text-red-500" />
+            </div>
+            <h2 className="text-2xl font-black text-slate-900 mb-3">Subscription Expired</h2>
+            <p className="text-slate-500 font-medium mb-8">
+              Your restaurant's subscription plan has expired. Operations are currently restricted. Please contact the administrator to extend your plan.
+            </p>
+            <button 
+              onClick={() => setShowExpiredWarning(false)}
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-red-500/30 transition-all active:scale-[0.98]"
+            >
+              Dismiss Warning
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Top Navbar */}
       <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-20 sticky top-0 shadow-sm">
         <div className="flex items-center gap-4">

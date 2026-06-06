@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link, Outlet, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { io } from 'socket.io-client';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChefHat,
   LayoutDashboard,
@@ -23,7 +24,9 @@ import {
   Users,
   Radio,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  X,
+  ShieldAlert
 } from 'lucide-react';
 
 const DashboardLayout = () => {
@@ -35,6 +38,24 @@ const DashboardLayout = () => {
   const [alerts, setAlerts] = useState([]);
   const [expandedGroups, setExpandedGroups] = useState({});
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showExpiryWarning, setShowExpiryWarning] = useState(false);
+
+  // Check subscription expiry
+  useEffect(() => {
+    if (restaurant?.subscriptionExpiry) {
+      const checkExpiry = () => {
+        const expiryDate = new Date(restaurant.subscriptionExpiry);
+        const now = new Date();
+        if (now > expiryDate) {
+          setShowExpiryWarning(true);
+        }
+      };
+      
+      checkExpiry();
+      const interval = setInterval(checkExpiry, 60000); // Check every minute
+      return () => clearInterval(interval);
+    }
+  }, [restaurant]);
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -188,6 +209,29 @@ const DashboardLayout = () => {
         </button>
       </div>
 
+      <AnimatePresence>
+        {showExpiryWarning && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-md bg-red-600 text-white p-4 rounded-2xl shadow-2xl shadow-red-600/30 border border-red-500 flex items-start gap-4"
+          >
+            <ShieldAlert size={24} className="shrink-0 animate-pulse mt-0.5" />
+            <div className="flex-1">
+              <h3 className="font-bold text-lg leading-tight">Subscription Expired</h3>
+              <p className="text-sm font-medium mt-1 text-red-100">Your restaurant's plan has expired. Please contact the administrator to renew your subscription.</p>
+            </div>
+            <button 
+              onClick={() => setShowExpiryWarning(false)}
+              className="p-1.5 hover:bg-red-700 rounded-lg transition-colors shrink-0 cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Overlay for mobile */}
       {isMobileMenuOpen && (
         <div className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={() => setIsMobileMenuOpen(false)}></div>
@@ -321,7 +365,25 @@ const DashboardLayout = () => {
             </div>
             <div className="overflow-hidden">
               <p className="font-semibold text-sm text-white truncate">{restaurant?.restaurantName || 'Restaurant'}</p>
-              <p className="text-xs text-slate-500 truncate">Store Owner</p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="text-[10px] bg-indigo-500/20 text-indigo-400 px-1.5 py-0.5 rounded font-semibold truncate border border-indigo-500/20">{restaurant?.plan || 'Free'}</span>
+                {restaurant?.subscriptionExpiry && (
+                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border truncate ${
+                    Math.ceil((new Date(restaurant.subscriptionExpiry) - new Date()) / (1000 * 60 * 60 * 24)) > 7 
+                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                      : Math.ceil((new Date(restaurant.subscriptionExpiry) - new Date()) / (1000 * 60 * 60 * 24)) > 0
+                        ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                        : 'bg-red-500/10 text-red-400 border-red-500/20 animate-pulse'
+                  }`}>
+                    {(() => {
+                      const days = Math.ceil((new Date(restaurant.subscriptionExpiry) - new Date()) / (1000 * 60 * 60 * 24));
+                      if (days > 0) return `${days} days left`;
+                      if (days === 0) return 'Expires today';
+                      return `Expired ${Math.abs(days)}d ago`;
+                    })()}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
           <button

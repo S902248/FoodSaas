@@ -395,7 +395,7 @@ const changeStatus = async (req, res) => {
     res.json(rest);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server Error');
+    res.status(500).json({ message: err.message || 'Server Error' });
   }
 };
 
@@ -424,6 +424,33 @@ const extendSubscription = async (req, res) => {
 
     await logAction('Extend Subscription', `Extended subscription of ${rest.restaurantName} by ${days} days`);
     res.json(rest);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+};
+
+// @desc    Change Restaurant Password
+// @route   PUT /api/superadmin/restaurants/:id/password
+// @access  Private (Super Admin)
+const changePassword = async (req, res) => {
+  try {
+    const { password } = req.body;
+    if (!password || password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    const rest = await Restaurant.findById(req.params.id);
+    if (!rest) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    rest.password = await bcrypt.hash(password, salt);
+    await rest.save();
+
+    await logAction('Change Password', `Changed password for restaurant ${rest.restaurantName}`);
+    res.json({ message: 'Password updated successfully' });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
@@ -734,5 +761,6 @@ module.exports = {
   getNotifications,
   createNotification,
   getSettings,
-  saveSettings
+  saveSettings,
+  changePassword
 };

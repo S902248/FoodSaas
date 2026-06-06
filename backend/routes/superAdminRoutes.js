@@ -23,7 +23,8 @@ const {
   getNotifications,
   createNotification,
   getSettings,
-  saveSettings
+  saveSettings,
+  changePassword
 } = require('../controllers/superAdminController');
 
 // Public route
@@ -36,10 +37,11 @@ router.get('/stats', protectSuperAdmin, getStats);
 // Restaurant management
 router.get('/restaurants', protectSuperAdmin, getRestaurants);
 router.post('/restaurants', protectSuperAdmin, createRestaurant);
-router.put('/restaurants/:id', protectSuperAdmin, updateRestaurant);
-router.delete('/restaurants/:id', protectSuperAdmin, deleteRestaurant);
 router.put('/restaurants/:id/status', protectSuperAdmin, changeStatus);
 router.put('/restaurants/:id/extend', protectSuperAdmin, extendSubscription);
+router.put('/restaurants/:id/password', protectSuperAdmin, changePassword);
+router.put('/restaurants/:id', protectSuperAdmin, updateRestaurant);
+router.delete('/restaurants/:id', protectSuperAdmin, deleteRestaurant);
 
 // Subscription plans CRUD
 router.get('/plans', protectSuperAdmin, getPlans);
