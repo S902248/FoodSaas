@@ -359,6 +359,10 @@ class Model {
     return new Query(Promise.resolve(new this(updatedItem)));
   }
 
+  static async findByIdAndDelete(id) {
+    return this.findOneAndDelete({ _id: id });
+  }
+
   static async findOneAndDelete(query) {
     const modelName = this.modelName;
     const dbData = readDB();

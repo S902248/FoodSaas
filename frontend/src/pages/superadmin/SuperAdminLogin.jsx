@@ -45,7 +45,7 @@ const SuperAdminLogin = () => {
           <div className="inline-flex p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 mb-4 shadow-inner">
             <ShieldCheck size={32} />
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">FoodaaS Super Admin</h1>
+          <h1 className="text-2xl font-extrabold text-white tracking-tight">BitsCon Super Admin</h1>
           <p className="text-xs text-slate-400 font-semibold mt-1">Authorized access only. System activity is logged.</p>
         </div>
 
@@ -71,7 +71,7 @@ const SuperAdminLogin = () => {
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@foodaas.com"
+                placeholder="admin@bitscon.com"
                 required
                 className="w-full pl-11 pr-4 py-3 bg-slate-950/60 border border-slate-800 rounded-2xl text-slate-100 text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all placeholder:text-slate-600"
               />
@@ -113,7 +113,7 @@ const SuperAdminLogin = () => {
 
         {/* Footer info */}
         <div className="mt-8 text-center">
-          <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest">FoodaaS QR ordering SaaS</p>
+          <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest">BitsCon QR ordering SaaS</p>
         </div>
       </motion.div>
     </div>

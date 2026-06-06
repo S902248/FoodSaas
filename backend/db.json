@@ -132,8 +132,8 @@
       "createdAt": 1780503985787,
       "_id": "b4dc52ce27b7a82e62677b6e",
       "id": "b4dc52ce27b7a82e62677b6e",
-      "updatedAt": "2026-06-03T18:00:00.761Z",
-      "stock": -2,
+      "updatedAt": "2026-06-06T10:25:07.820Z",
+      "stock": -7,
       "lowStockThreshold": 10
     },
     {
@@ -143,12 +143,12 @@
       "category": "Roti",
       "image": "http://localhost:5000/uploads/1780504643151-wallpaper.jpg",
       "isAvailable": true,
-      "stock": -6,
+      "stock": -13,
       "lowStockThreshold": 10,
       "createdAt": 1780504645060,
       "_id": "9a894077a83a2252cb1eee6b",
       "id": "9a894077a83a2252cb1eee6b",
-      "updatedAt": "2026-06-03T18:00:07.056Z"
+      "updatedAt": "2026-06-06T10:25:07.816Z"
     }
   ],
   "Restaurant": [
@@ -236,6 +236,60 @@
       "id": "fe9750b1af36f9e1dbd2c818",
       "updatedAt": "2026-06-03T10:40:28.846Z",
       "name": "The Burger Club"
+    },
+    {
+      "restaurantName": "Test Notification Restaurant",
+      "email": "testnotif@example.com",
+      "password": "$2b$10$qqDOEptac0ivtrmcqOKZRO2nIUMJH9BTM/bmmpQEJSmbB/pGVu.cW",
+      "ownerName": "Test Owner",
+      "phone": "9999999999",
+      "tableLimit": 50,
+      "plan": "df97bf4ed5a5edcd3deb4db6",
+      "status": "active",
+      "subscriptionExpiry": "2026-07-04T19:46:47.644Z",
+      "resetOtp": null,
+      "resetOtpExpires": null,
+      "createdAt": 1780602407644,
+      "_id": "91b05b2d3f33aae55c53ee6d",
+      "id": "91b05b2d3f33aae55c53ee6d",
+      "updatedAt": "2026-06-04T19:46:47.644Z",
+      "name": "Test Notification Restaurant"
+    },
+    {
+      "restaurantName": "nivrutti galhe",
+      "email": "nivrutti@foodaas.com",
+      "password": "$2b$10$xJ6lWsLTj0ql1fISPw7VWup8LXI9zep2OTiV2UnSVL4hwmR971Rg6",
+      "ownerName": "NG",
+      "phone": "9999999999",
+      "tableLimit": 50,
+      "plan": "df97bf4ed5a5edcd3deb4db6",
+      "status": "active",
+      "subscriptionExpiry": "2026-07-04T19:49:19.060Z",
+      "resetOtp": null,
+      "resetOtpExpires": null,
+      "createdAt": 1780602559060,
+      "_id": "23fd4eb02bcf0cf6552f2934",
+      "id": "23fd4eb02bcf0cf6552f2934",
+      "updatedAt": "2026-06-04T19:49:19.060Z",
+      "name": "nivrutti galhe"
+    },
+    {
+      "restaurantName": "Bell Test Restaurant",
+      "email": "belltest123@test.com",
+      "password": "$2b$10$iI0/dYnqZ0Y6grxA7tfK8.9twiWrl8jlSgbR7B.yYs.yqPus8OihC",
+      "ownerName": "Bell Owner",
+      "phone": "8888888888",
+      "tableLimit": 50,
+      "plan": "df97bf4ed5a5edcd3deb4db6",
+      "status": "active",
+      "subscriptionExpiry": "2026-07-04T19:55:06.665Z",
+      "resetOtp": null,
+      "resetOtpExpires": null,
+      "createdAt": 1780602906665,
+      "_id": "c08e69db96a8aeda17846f51",
+      "id": "c08e69db96a8aeda17846f51",
+      "updatedAt": "2026-06-04T19:55:06.665Z",
+      "name": "Bell Test Restaurant"
     }
   ],
   "QRCode": [
@@ -246,11 +300,12 @@
       "status": "active",
       "url": "http://localhost:5173/scan/natkhat-t1",
       "totalScans": 42,
-      "ordersPlaced": 13,
+      "ordersPlaced": 17,
       "_id": "d21af1243c285cd60d856de9",
       "id": "d21af1243c285cd60d856de9",
       "createdAt": "2026-06-03T10:40:28.861Z",
-      "updatedAt": "2026-06-03T17:23:44.747Z"
+      "updatedAt": "2026-06-06T10:22:04.751Z",
+      "isReserved": false
     },
     {
       "restaurant": "e09cb061f119eb2a51df8e99",
@@ -278,6 +333,19 @@
       "createdAt": "2026-06-03T16:23:01.852Z",
       "updatedAt": "2026-06-03T18:00:07.059Z",
       "lastScanned": "2026-06-03T16:23:11.598Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "tableName": "1",
+      "section": "Main",
+      "status": "active",
+      "url": "http://localhost:5173/scan/cdb7f7fd82c9b8c8e0e8ec87",
+      "totalScans": 0,
+      "ordersPlaced": 0,
+      "_id": "cdb7f7fd82c9b8c8e0e8ec87",
+      "id": "cdb7f7fd82c9b8c8e0e8ec87",
+      "createdAt": "2026-06-06T09:19:44.915Z",
+      "updatedAt": "2026-06-06T09:19:44.919Z"
     }
   ],
   "Order": [
@@ -299,13 +367,13 @@
         }
       ],
       "totalAmount": 350,
-      "paymentStatus": "Pending",
+      "paymentStatus": "Paid",
       "status": "Completed",
       "eta": "10 mins",
       "_id": "676c96d46d7316c6f9468444",
       "id": "676c96d46d7316c6f9468444",
       "createdAt": "2026-06-03T10:40:28.863Z",
-      "updatedAt": "2026-06-03T17:41:19.947Z"
+      "updatedAt": "2026-06-06T10:16:23.716Z"
     },
     {
       "restaurant": "e09cb061f119eb2a51df8e99",
@@ -346,13 +414,13 @@
         }
       ],
       "totalAmount": 25,
-      "paymentStatus": "Pending",
+      "paymentStatus": "Paid",
       "status": "Completed",
       "eta": "15 min",
       "_id": "2a99edae6964658ed38c9e9b",
       "id": "2a99edae6964658ed38c9e9b",
       "createdAt": "2026-06-03T17:23:44.731Z",
-      "updatedAt": "2026-06-03T17:41:19.938Z"
+      "updatedAt": "2026-06-06T10:16:23.718Z"
     },
     {
       "restaurant": "06ea5dd1b8b52637bbb939ac",
@@ -372,13 +440,13 @@
         }
       ],
       "totalAmount": 49,
-      "paymentStatus": "Pending",
+      "paymentStatus": "Paid",
       "status": "Completed",
       "eta": "15 min",
       "_id": "a85100b810c87d8a7504052c",
       "id": "a85100b810c87d8a7504052c",
       "createdAt": "2026-06-03T17:25:09.201Z",
-      "updatedAt": "2026-06-03T17:38:24.144Z"
+      "updatedAt": "2026-06-06T10:17:39.950Z"
     },
     {
       "restaurant": "06ea5dd1b8b52637bbb939ac",
@@ -393,13 +461,13 @@
         }
       ],
       "totalAmount": 25,
-      "paymentStatus": "Pending",
+      "paymentStatus": "Paid",
       "status": "Completed",
       "eta": "15 min",
       "_id": "d5dabe83e6746e9ec4ef9d69",
       "id": "d5dabe83e6746e9ec4ef9d69",
       "createdAt": "2026-06-03T17:44:18.309Z",
-      "updatedAt": "2026-06-03T17:45:08.624Z"
+      "updatedAt": "2026-06-06T10:17:39.953Z"
     },
     {
       "restaurant": "06ea5dd1b8b52637bbb939ac",
@@ -414,13 +482,13 @@
         }
       ],
       "totalAmount": 25,
-      "paymentStatus": "Pending",
+      "paymentStatus": "Paid",
       "status": "Completed",
       "eta": "15 min",
       "_id": "4bdbdf992a25fa755e6fca9b",
       "id": "4bdbdf992a25fa755e6fca9b",
       "createdAt": "2026-06-03T17:44:27.401Z",
-      "updatedAt": "2026-06-03T17:45:08.606Z"
+      "updatedAt": "2026-06-06T10:17:39.955Z"
     },
     {
       "restaurant": "06ea5dd1b8b52637bbb939ac",
@@ -440,13 +508,13 @@
         }
       ],
       "totalAmount": 49,
-      "paymentStatus": "Pending",
-      "status": "New Order",
+      "paymentStatus": "Paid",
+      "status": "Completed",
       "eta": "15 min",
       "_id": "080c09095722e5a9b950cf2f",
       "id": "080c09095722e5a9b950cf2f",
       "createdAt": "2026-06-03T18:00:00.741Z",
-      "updatedAt": "2026-06-03T18:00:00.742Z"
+      "updatedAt": "2026-06-06T10:17:39.958Z"
     },
     {
       "restaurant": "06ea5dd1b8b52637bbb939ac",
@@ -461,13 +529,185 @@
         }
       ],
       "totalAmount": 25,
-      "paymentStatus": "Pending",
-      "status": "New Order",
+      "paymentStatus": "Paid",
+      "status": "Completed",
       "eta": "15 min",
       "_id": "ca5a3fa3903d4b66394d570c",
       "id": "ca5a3fa3903d4b66394d570c",
       "createdAt": "2026-06-03T18:00:07.054Z",
-      "updatedAt": "2026-06-03T18:00:07.054Z"
+      "updatedAt": "2026-06-06T10:17:39.962Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1008",
+      "tableName": "Parcel",
+      "customerName": "Guest 957",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 25,
+      "paymentStatus": "Paid",
+      "status": "Completed",
+      "eta": "15 min",
+      "_id": "58974bfd4edd8b38b45e514c",
+      "id": "58974bfd4edd8b38b45e514c",
+      "createdAt": "2026-06-06T09:08:23.598Z",
+      "updatedAt": "2026-06-06T10:26:59.256Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1009",
+      "tableName": "Table 1",
+      "customerName": "Guest 647",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        },
+        {
+          "name": "White Roti",
+          "price": 24,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 49,
+      "paymentStatus": "Paid",
+      "status": "Completed",
+      "eta": "15 min",
+      "_id": "0d39ee4dcdc524c376c25090",
+      "id": "0d39ee4dcdc524c376c25090",
+      "createdAt": "2026-06-06T10:10:27.469Z",
+      "updatedAt": "2026-06-06T10:16:23.720Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1010",
+      "tableName": "Table 1",
+      "customerName": "Guest 720",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        },
+        {
+          "name": "White Roti",
+          "price": 24,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 49,
+      "paymentStatus": "Paid",
+      "status": "Completed",
+      "eta": "15 min",
+      "_id": "ed065496378befff2f378ad6",
+      "id": "ed065496378befff2f378ad6",
+      "createdAt": "2026-06-06T10:16:41.113Z",
+      "updatedAt": "2026-06-06T10:17:26.297Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1011",
+      "tableName": "Table 1",
+      "customerName": "Guest 431",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 25,
+      "paymentStatus": "Paid",
+      "status": "Completed",
+      "eta": "15 min",
+      "_id": "30f328ebb565d684c5adbe24",
+      "id": "30f328ebb565d684c5adbe24",
+      "createdAt": "2026-06-06T10:17:59.474Z",
+      "updatedAt": "2026-06-06T10:21:57.188Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1012",
+      "tableName": "Parcel",
+      "customerName": "Guest 791",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        },
+        {
+          "name": "White Roti",
+          "price": 24,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 49,
+      "paymentStatus": "Paid",
+      "status": "Completed",
+      "eta": "15 min",
+      "_id": "3f437cf4bc404889418df71e",
+      "id": "3f437cf4bc404889418df71e",
+      "createdAt": "2026-06-06T10:20:56.535Z",
+      "updatedAt": "2026-06-06T10:26:57.354Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1013",
+      "tableName": "Table 1",
+      "customerName": "Guest 758",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        },
+        {
+          "name": "White Roti",
+          "price": 24,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 49,
+      "paymentStatus": "Paid",
+      "status": "Completed",
+      "eta": "15 min",
+      "_id": "240388c4c33575b440c0f5cd",
+      "id": "240388c4c33575b440c0f5cd",
+      "createdAt": "2026-06-06T10:22:04.739Z",
+      "updatedAt": "2026-06-06T10:22:12.293Z"
+    },
+    {
+      "restaurant": "06ea5dd1b8b52637bbb939ac",
+      "orderId": "#1014",
+      "tableName": "Parcel",
+      "customerName": "Guest 673",
+      "items": [
+        {
+          "name": "Butter Roti",
+          "price": 25,
+          "quantity": 1
+        },
+        {
+          "name": "White Roti",
+          "price": 24,
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 49,
+      "paymentStatus": "Paid",
+      "status": "Completed",
+      "eta": "15 min",
+      "_id": "44877fb29605881643770790",
+      "id": "44877fb29605881643770790",
+      "createdAt": "2026-06-06T10:25:07.813Z",
+      "updatedAt": "2026-06-06T10:26:55.558Z"
     }
   ],
   "SuperAdmin": [
@@ -913,6 +1153,123 @@
       "id": "1ccdb67b30eaeb0c4f77b26c",
       "createdAt": "2026-06-04T04:44:02.400Z",
       "updatedAt": "2026-06-04T04:44:02.400Z"
+    },
+    {
+      "action": "Login",
+      "details": "Super Admin admin@foodaas.com logged in successfully",
+      "performedBy": "Super Admin",
+      "_id": "f032ba3acc44afe59f9a9d84",
+      "id": "f032ba3acc44afe59f9a9d84",
+      "createdAt": "2026-06-04T19:06:36.632Z",
+      "updatedAt": "2026-06-04T19:06:36.632Z"
+    },
+    {
+      "action": "Create Restaurant",
+      "details": "Created restaurant j (Owner: j)",
+      "performedBy": "Super Admin",
+      "_id": "01ef4ad99a64c81b8582d5e2",
+      "id": "01ef4ad99a64c81b8582d5e2",
+      "createdAt": "2026-06-04T19:07:10.456Z",
+      "updatedAt": "2026-06-04T19:07:10.456Z"
+    },
+    {
+      "action": "Delete Restaurant",
+      "details": "Deleted restaurant j and all associated records",
+      "performedBy": "Super Admin",
+      "_id": "36a4a2f645bd68b638dff461",
+      "id": "36a4a2f645bd68b638dff461",
+      "createdAt": "2026-06-04T19:16:26.258Z",
+      "updatedAt": "2026-06-04T19:16:26.258Z"
+    },
+    {
+      "action": "Create Restaurant",
+      "details": "Created restaurant niuritti galhe (Owner: ng)",
+      "performedBy": "Super Admin",
+      "_id": "0527aa013f5167fbd1d96a58",
+      "id": "0527aa013f5167fbd1d96a58",
+      "createdAt": "2026-06-04T19:17:20.169Z",
+      "updatedAt": "2026-06-04T19:17:20.169Z"
+    },
+    {
+      "action": "Delete Restaurant",
+      "details": "Deleted restaurant niuritti galhe and all associated records",
+      "performedBy": "Super Admin",
+      "_id": "d67956e366231add9a39a8db",
+      "id": "d67956e366231add9a39a8db",
+      "createdAt": "2026-06-04T19:20:16.339Z",
+      "updatedAt": "2026-06-04T19:20:16.339Z"
+    },
+    {
+      "action": "Create Restaurant",
+      "details": "Created restaurant niurutti galhe  (Owner: NG)",
+      "performedBy": "Super Admin",
+      "_id": "f8dd292bb9e41c04663ef47c",
+      "id": "f8dd292bb9e41c04663ef47c",
+      "createdAt": "2026-06-04T19:20:56.202Z",
+      "updatedAt": "2026-06-04T19:20:56.202Z"
+    },
+    {
+      "action": "Login",
+      "details": "Super Admin admin@foodaas.com logged in successfully",
+      "performedBy": "Super Admin",
+      "_id": "09b9d1cf527d03764ab9a7f5",
+      "id": "09b9d1cf527d03764ab9a7f5",
+      "createdAt": "2026-06-04T19:42:59.294Z",
+      "updatedAt": "2026-06-04T19:42:59.294Z"
+    },
+    {
+      "action": "Create Restaurant",
+      "details": "Created restaurant Test Notification Restaurant (Owner: Test Owner)",
+      "performedBy": "Super Admin",
+      "_id": "2c687fd048679c5ba36d5982",
+      "id": "2c687fd048679c5ba36d5982",
+      "createdAt": "2026-06-04T19:46:47.656Z",
+      "updatedAt": "2026-06-04T19:46:47.656Z"
+    },
+    {
+      "action": "Delete Restaurant",
+      "details": "Deleted restaurant niurutti galhe  and all associated records",
+      "performedBy": "Super Admin",
+      "_id": "c81e5af582b0e09d4a188f70",
+      "id": "c81e5af582b0e09d4a188f70",
+      "createdAt": "2026-06-04T19:48:46.046Z",
+      "updatedAt": "2026-06-04T19:48:46.046Z"
+    },
+    {
+      "action": "Create Restaurant",
+      "details": "Created restaurant nivrutti galhe (Owner: NG)",
+      "performedBy": "Super Admin",
+      "_id": "bd5335a6f2998f39b6d34892",
+      "id": "bd5335a6f2998f39b6d34892",
+      "createdAt": "2026-06-04T19:49:19.064Z",
+      "updatedAt": "2026-06-04T19:49:19.064Z"
+    },
+    {
+      "action": "Create Restaurant",
+      "details": "Created restaurant Bell Test Restaurant (Owner: Bell Owner)",
+      "performedBy": "Super Admin",
+      "_id": "541309f3da10f963d1aee2d2",
+      "id": "541309f3da10f963d1aee2d2",
+      "createdAt": "2026-06-04T19:55:06.669Z",
+      "updatedAt": "2026-06-04T19:55:06.669Z"
+    },
+    {
+      "action": "Login",
+      "details": "Super Admin admin@foodaas.com logged in successfully",
+      "performedBy": "Super Admin",
+      "_id": "1f3494aac2b9bd63f14fbb45",
+      "id": "1f3494aac2b9bd63f14fbb45",
+      "createdAt": "2026-06-06T09:59:27.837Z",
+      "updatedAt": "2026-06-06T09:59:27.837Z"
+    },
+    {
+      "action": "Update Settings",
+      "details": "Updated system configurations & branding parameters",
+      "performedBy": "Super Admin",
+      "_id": "3d31e8d22854b790e92a77aa",
+      "id": "3d31e8d22854b790e92a77aa",
+      "createdAt": "2026-06-06T10:00:01.452Z",
+      "updatedAt": "2026-06-06T10:00:01.452Z"
     }
   ],
   "Category": [

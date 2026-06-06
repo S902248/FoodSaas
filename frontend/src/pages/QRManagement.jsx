@@ -126,7 +126,7 @@ const QRManagement = () => {
     
     // Add branding
     pdf.setFontSize(24);
-    pdf.text(restaurant?.restaurantName || 'FoodaaS Restaurant', 105, 30, { align: 'center' });
+    pdf.text(restaurant?.restaurantName || 'BitsCon Restaurant', 105, 30, { align: 'center' });
     pdf.setFontSize(16);
     pdf.text(`Table: ${currentQR.tableName}`, 105, 45, { align: 'center' });
     
@@ -501,7 +501,7 @@ const QRManagement = () => {
                 <div className="p-2 bg-gradient-to-br from-[#6C4DFF] to-indigo-600 rounded-xl shadow-lg mb-3">
                   <ChefHat size={20} className="text-white" />
                 </div>
-                <h3 className="text-lg font-extrabold text-slate-900">{restaurant?.restaurantName || 'Foodaas'}</h3>
+                <h3 className="text-lg font-extrabold text-slate-900">{restaurant?.restaurantName || 'BitsCon'}</h3>
                 <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-6">{currentQR.tableName}</p>
                 
                 <div 

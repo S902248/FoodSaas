@@ -9,5 +9,6 @@ router.post('/', orderController.createOrder);
 // Protected routes: owner views and manages orders
 router.get('/', protect, orderController.getOrders);
 router.put('/:id/status', protect, orderController.updateOrderStatus);
+router.put('/table/:tableName/checkout', protect, orderController.checkoutTable);
 
 module.exports = router;

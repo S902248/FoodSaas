@@ -31,7 +31,7 @@ const Register = () => {
         <div className="relative z-10 text-center text-white px-12">
           <div className="flex items-center justify-center gap-3 mb-6">
             <ChefHat size={48} />
-            <h1 className="text-5xl font-bold tracking-tight">FoodaaS</h1>
+            <h1 className="text-5xl font-bold tracking-tight">BitsCon</h1>
           </div>
           <p className="text-xl text-indigo-100 mb-8 font-light">
             Smart QR Ordering for Modern Restaurants
@@ -48,7 +48,7 @@ const Register = () => {
         <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl border border-gray-100">
           <div className="lg:hidden flex items-center justify-center gap-2 mb-8 text-indigo-600">
             <ChefHat size={32} />
-            <h1 className="text-3xl font-bold">FoodaaS</h1>
+            <h1 className="text-3xl font-bold">BitsCon</h1>
           </div>
           
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>

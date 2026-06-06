@@ -172,11 +172,12 @@ const registerRestaurant = async (req, res) => {
     await restaurant.save();
 
     // -- REAL-TIME NOTIFICATION HOOK --
+    const { publishNotification } = require('../utils/redisClient');
+    const notifMsg = `New restaurant registered: ${restaurantName} (${email})`;
+
+    // 1. Save to DB (non-blocking — failure does NOT prevent real-time event)
     try {
       const Notification = require('../models/Notification');
-      const { publishNotification } = require('../utils/redisClient');
-      
-      const notifMsg = `New restaurant registered: ${restaurantName} (${email})`;
       const newNotif = new Notification({
         title: 'New Registration',
         message: notifMsg,
@@ -184,15 +185,21 @@ const registerRestaurant = async (req, res) => {
         recipient: restaurant._id
       });
       await newNotif.save();
+    } catch (dbErr) {
+      console.error('[Notification] DB save failed (real-time still fires):', dbErr.message);
+    }
 
+    // 2. Always fire real-time event regardless of DB result
+    try {
       await publishNotification({
         title: 'New Registration',
         message: notifMsg,
         time: new Date(),
         type: 'system'
       });
-    } catch (notifErr) {
-      console.error('Failed to send real-time notification on register:', notifErr);
+      console.log('[Notification] Real-time event published for:', restaurantName);
+    } catch (pubErr) {
+      console.error('[Notification] Failed to publish real-time event:', pubErr.message);
     }
     // ---------------------------------
 

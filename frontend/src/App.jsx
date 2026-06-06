@@ -15,6 +15,7 @@ import LiveOrderTracking from './pages/LiveOrderTracking';
 import ComingSoon from './pages/ComingSoon';
 import TableManagement from './pages/TableManagement';
 import TablePOS from './pages/TablePOS';
+import BillingPOS from './pages/BillingPOS';
 
 // Super Admin Pages
 import SuperAdminLogin from './pages/superadmin/SuperAdminLogin';
@@ -75,13 +76,10 @@ function AppRoutes() {
         <Route index element={<Dashboard />} />
         <Route path="menu" element={<Menu />} />
         <Route path="orders" element={<LiveOrderTracking />} />
-        <Route path="qr-codes" element={<QRManagement />} />
         <Route path="tables" element={<TableManagement />} />
         <Route path="tables/:id" element={<TablePOS />} />
         <Route path="customers" element={<ComingSoon title="Customer Management" />} />
-        <Route path="billing" element={<ComingSoon title="Billing & Invoicing" />} />
-        <Route path="reports" element={<ComingSoon title="Advanced Reports" />} />
-        <Route path="settings" element={<ComingSoon title="Restaurant Settings" />} />
+        <Route path="billing" element={<BillingPOS />} />
       </Route>
 
       <Route 

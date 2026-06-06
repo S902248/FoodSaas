@@ -95,6 +95,12 @@ exports.createOrder = async (req, res) => {
     } catch (qrErr) {
       console.error('Failed to increment QR code orders count:', qrErr);
     }
+    
+    // Emit event for real-time dashboard updates
+    const io = req.app.get('io');
+    if (io) {
+      io.to(restaurantId.toString()).emit('orders_updated');
+    }
 
     res.status(201).json(order);
   } catch (error) {
@@ -134,9 +140,55 @@ exports.updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
+    const io = req.app.get('io');
+    if (io) {
+      io.to(req.restaurant.id.toString()).emit('orders_updated');
+    }
+
     res.json(order);
   } catch (error) {
     console.error('Error updating order status:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// Checkout all pending orders for a table (Protected route)
+exports.checkoutTable = async (req, res) => {
+  try {
+    const { tableName } = req.params;
+    
+    // Find all pending orders for this table
+    const pendingOrders = await Order.find({
+      restaurant: req.restaurant.id,
+      tableName: { $regex: new RegExp(`^${tableName}$`, 'i') },
+      paymentStatus: 'Pending'
+    });
+
+    if (pendingOrders.length === 0) {
+      return res.status(404).json({ message: 'No pending orders found for this table' });
+    }
+
+    const orderIds = pendingOrders.map(o => o._id);
+
+    // Update all these orders to Paid and Completed
+    // Using a loop because mockMongoose doesn't support updateMany or $in natively yet
+    for (const id of orderIds) {
+      await Order.findByIdAndUpdate(id, { 
+        $set: { 
+          paymentStatus: 'Paid',
+          status: 'Completed'
+        } 
+      });
+    }
+
+    const io = req.app.get('io');
+    if (io) {
+      io.to(req.restaurant.id.toString()).emit('orders_updated');
+    }
+
+    res.json({ success: true, message: 'Table cleared and payment recorded.' });
+  } catch (error) {
+    console.error('Error during table checkout:', error);
     res.status(500).json({ message: 'Server Error' });
   }
 };

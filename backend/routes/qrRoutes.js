@@ -13,5 +13,6 @@ router.delete('/:id', protect, qrController.deleteQRCode);
 // Public route (for customers scanning the QR)
 router.post('/:id/scan', qrController.trackScan);
 router.post('/order/increment', qrController.incrementOrderCount);
+router.put('/:id/reserve', protect, qrController.toggleReserveStatus);
 
 module.exports = router;
